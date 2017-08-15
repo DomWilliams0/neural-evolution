@@ -1,15 +1,40 @@
-#include "simulator.h"
 #include <plog/Log.h>
 #include <plog/Appenders/ColorConsoleAppender.h>
 
-Simulator::Simulator() {
-    static plog::ColorConsoleAppender<plog::TxtFormatter> appender;
-    plog::init(plog::debug, &appender);
+#include "simulator.h"
+#include "config.h"
 
-    LOG_VERBOSE << "This is a VERBOSE message";
-    LOG_DEBUG << "This is a DEBUG message";
-    LOG_INFO << "This is an INFO message";
-    LOG_WARNING << "This is a WARNING message";
-    LOG_ERROR << "This is an ERROR message";
-    LOG_FATAL << "This is a FATAL message";
+void initLogger() {
+    plog::init(plog::debug);
+}
+
+
+Simulator::Simulator() : physicsWorld({Config::WORLD_WIDTH, Config::WORLD_HEIGHT}), generationTime(0.f),
+                         generationNumber(0.f) {
+    initLogger();
+
+    // register systems
+}
+
+void Simulator::tick(double dt) {
+
+    generationTime -= dt;
+
+    if (generationTime < 0)
+        startNewGeneration();
+
+    systems.update_all(dt);
+}
+
+void Simulator::startNewGeneration() {
+    // reset clock
+    generationTime = Config::TIME_PER_GENERATION;
+
+    generationNumber += 1;
+
+    LOG_INFO << "New generation " << generationNumber;
+
+    // collect fittest brains
+    // reset the world
+    // mutate and add back to world
 }

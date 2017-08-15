@@ -6,6 +6,8 @@ namespace Config {
     // world
     extern const int WORLD_WIDTH;
     extern const int WORLD_HEIGHT;
+    extern const int TIME_GRANUALITY;
+    extern const float TIME_GRANUALITY_RECIP;
 
     // generations
     extern const int TIME_PER_GENERATION;
