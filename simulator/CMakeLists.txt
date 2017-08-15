@@ -20,3 +20,6 @@ if(ENTITYX_FOUND)
     include_directories(${ENTITYX_INCLUDE_DIR})
     target_link_libraries(${PROJECT_NAME} ${ENTITYX_LIBRARIES})
 endif()
+
+# logger
+include_directories(lib/plog/include)

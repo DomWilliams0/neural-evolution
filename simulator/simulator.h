@@ -3,7 +3,8 @@
 
 
 class Simulator {
-
+public:
+    Simulator();
 };
 
 
