@@ -2,8 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(renderer)
 
 # sources
-include_directories(include)
-file (GLOB SRC src/*.cpp include/*.h)
+file (GLOB SRC *.cpp *.h)
 
 # create lib
 add_library(${PROJECT_NAME} SHARED ${SRC})
