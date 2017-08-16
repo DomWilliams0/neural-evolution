@@ -1,3 +1,4 @@
+#include <vector>
 #include "world.h"
 #include "config.h"
 
@@ -25,4 +26,26 @@ float World::getTemperature(const b2Vec2 &pos) const {
 
 b2Vec2 World::getDimensions() const {
     return dims;
+}
+
+void World::spawnEntity(const b2Vec2 &pos, float radius, b2Body **bodyOut, b2Fixture **fixtureOut) {
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+    bodyDef.position = pos;
+    // TODO userdata on body or fixture?
+
+    b2CircleShape circle;
+    circle.m_p = pos;
+    circle.m_radius = static_cast<float32>(radius);
+
+    b2FixtureDef fixtureDef;
+    fixtureDef.density = 1;
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreturn-stack-address"
+    fixtureDef.shape = &circle;
+#pragma clang diagnostic pop
+
+    *bodyOut = physWorld.CreateBody(&bodyDef);
+    *fixtureOut = (*bodyOut)->CreateFixture(&fixtureDef);
 }

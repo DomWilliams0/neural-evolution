@@ -14,6 +14,9 @@ namespace Config {
     extern const float TOP_PROPORTION_TO_TAKE;
     extern const int GENERATION_SIZE;
 
+    // entity
+    extern const float ENTITY_RADIUS;
+
 }
 
 #endif

@@ -10,4 +10,6 @@ namespace Config {
     const int TIME_PER_GENERATION = 10;
     const float TOP_PROPORTION_TO_TAKE = 0.2;
     const int GENERATION_SIZE = 10;
+
+    const float ENTITY_RADIUS = 5;
 }

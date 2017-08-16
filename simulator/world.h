@@ -3,7 +3,6 @@
 
 #include <Box2D/Box2D.h>
 
-
 class World {
 
 protected:
@@ -23,6 +22,7 @@ public:
 
     b2Vec2 getDimensions() const;
 
+    void spawnEntity(const b2Vec2 &pos, float radius, b2Body **bodyOut, b2Fixture **fixtureOut);
 };
 
 
