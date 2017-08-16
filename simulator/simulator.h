@@ -42,7 +42,7 @@ protected:
 public:
     Simulator();
 
-    void tick(double dt);
+    void tick(float dt);
 };
 
 

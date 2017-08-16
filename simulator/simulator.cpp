@@ -3,6 +3,7 @@
 #include <plog/Appenders/ColorConsoleAppender.h>
 
 #include "simulator.h"
+#include "system.h"
 
 void initLogger() {
     static plog::ColorConsoleAppender<plog::TxtFormatter> appender;
@@ -15,7 +16,10 @@ Simulator::Simulator() : world({Config::WORLD_WIDTH, Config::WORLD_HEIGHT}),
                          generationNumber(0) {
     initLogger();
 
-    // TODO register systems
+    // register systems
+    systems.add<BrainSystem>();
+    systems.add<NutritionSystem>();
+
     systems.configure();
 
     // create first generation from nothing
@@ -25,7 +29,7 @@ Simulator::Simulator() : world({Config::WORLD_WIDTH, Config::WORLD_HEIGHT}),
 
 }
 
-void Simulator::tick(double dt) {
+void Simulator::tick(float dt) {
 
     generationTime -= dt;
 
@@ -45,6 +49,7 @@ void Simulator::tick(double dt) {
     }
     queuedSpawns.clear();
 
+    world.tick(dt);
     systems.update_all(dt);
 }
 

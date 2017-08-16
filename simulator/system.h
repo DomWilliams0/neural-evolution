@@ -3,15 +3,11 @@
 
 #include <entityx/System.h>
 
-struct PhysicsSystem : public entityx::System<PhysicsSystem> {
+struct BrainSystem : public entityx::System<BrainSystem> {
     void update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) override;
 };
 
-struct BrainSystem : public entityx::System<PhysicsSystem> {
-    void update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) override;
-};
-
-struct NutritionSystem : public entityx::System<PhysicsSystem> {
+struct NutritionSystem : public entityx::System<NutritionSystem> {
     void update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) override;
 };
 
