@@ -2,7 +2,7 @@
 #include "neural.h"
 #include "config.h"
 
-NeuralNetwork::NeuralNetwork(std::initializer_list<unsigned int> layers) {
+NeuralNetwork::NeuralNetwork(const std::vector<unsigned int> &layers) {
     OpenNN::Vector<size_t> architecture(layers.begin(), layers.end());
     net.set(architecture);
 
@@ -11,6 +11,9 @@ NeuralNetwork::NeuralNetwork(std::initializer_list<unsigned int> layers) {
 
     // random parameters/weights/biases
     net.randomize_parameters_normal();
+}
+
+NeuralNetwork::NeuralNetwork() : NeuralNetwork(Config::NET_LAYERS) {
 }
 
 void NeuralNetwork::copyAndMutate(NeuralNetwork *out) const {
@@ -42,5 +45,9 @@ void NeuralNetwork::copyAndMutate(NeuralNetwork *out) const {
 void NeuralNetwork::tick(const std::vector<double> &inputs, std::vector<double> &outputs) {
     OpenNN::Vector<double> converted(inputs.cbegin(), inputs.cend());
     outputs = net.calculate_outputs(converted);
+}
+
+unsigned int NeuralNetwork::getInputCount() const {
+    return net.get_inputs_number();
 }
 

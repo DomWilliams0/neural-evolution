@@ -9,11 +9,15 @@ protected:
     OpenNN::NeuralNetwork net;
 
 public:
-    NeuralNetwork(std::initializer_list<unsigned int> layers);
+    NeuralNetwork(const std::vector<unsigned int> &layers);
+
+    NeuralNetwork();
 
     void copyAndMutate(NeuralNetwork *out) const;
 
     void tick(const std::vector<double> &inputs, std::vector<double> &outputs);
+
+    unsigned int getInputCount() const;
 };
 
 

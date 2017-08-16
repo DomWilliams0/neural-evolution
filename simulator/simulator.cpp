@@ -4,6 +4,7 @@
 
 #include "simulator.h"
 #include "system.h"
+#include "neural.h"
 
 void initLogger() {
     static plog::ColorConsoleAppender<plog::TxtFormatter> appender;
@@ -20,7 +21,7 @@ Simulator::Simulator() : world({Config::WORLD_WIDTH, Config::WORLD_HEIGHT}),
     srand(time(NULL));
 
     // register systems
-    systems.add<BrainSystem>();
+    systems.add<BrainSystem>(&this->world);
     systems.add<NutritionSystem>();
 
     systems.configure();
@@ -41,7 +42,7 @@ void Simulator::tick(float dt) {
 
     // populate new entities
     for (EntityDef &def : queuedSpawns) {
-        def.id.assign<Brain>();
+        def.id.assign<Brain>(def.brain ? def.brain : new NeuralNetwork);
 
         // physics
         b2Body *body = nullptr;
@@ -72,7 +73,7 @@ void Simulator::startNewGeneration() {
     // reset the world
 
     // mutate and add back to world
-    std::vector<Brain *> mutatedBrains;
+    std::vector<NeuralNetwork *> mutatedBrains;
     // TODO copy, mutate and delete old fit brains
 
     std::vector<EntityDef> newGeneration;
@@ -80,11 +81,11 @@ void Simulator::startNewGeneration() {
     spawnEntities(newGeneration);
 }
 
-void Simulator::createEntitiesFromBrains(std::vector<EntityDef> &out, const std::vector<Brain *> &brains) {
+void Simulator::createEntitiesFromBrains(std::vector<EntityDef> &out, const std::vector<NeuralNetwork *> &brains) {
     // TODO cycle through brains and create
 
-    EntityDef test(entities.create(), {100, 100}, &world);
-    out.push_back(test);
+    for (int i = 0; i < 20; ++i)
+        out.emplace_back(entities.create(), b2Vec2(100 + i * 5, 100), &world, Config::ENTITY_RADIUS, new NeuralNetwork);
 }
 
 void Simulator::spawnEntities(const std::vector<EntityDef> &defs) {

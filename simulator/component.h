@@ -5,6 +5,8 @@
 
 class World;
 
+class NeuralNetwork;
+
 struct Physics {
     Physics(b2Body *body, b2Fixture *fixture, float radius) : body(body), fixture(fixture), radius(radius) {}
 
@@ -16,7 +18,9 @@ struct Physics {
 };
 
 struct Brain {
-    // TODO pointer neural net
+    Brain(NeuralNetwork *network) : network(network) {}
+
+    NeuralNetwork *network;
 };
 
 struct Nutrition {

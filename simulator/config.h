@@ -21,6 +21,8 @@ namespace Config {
 
     // entity
     extern const float ENTITY_RADIUS;
+    extern const float ENTITY_MAX_SPEED;
+    extern const std::vector<unsigned int> NET_LAYERS;
 
 }
 

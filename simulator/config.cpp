@@ -1,3 +1,4 @@
+#include <vector.h>
 #include "config.h"
 
 namespace Config {
@@ -16,4 +17,9 @@ namespace Config {
     const float MUTATE_WEIGHT_CHANCE = 0.04;
 
     const float ENTITY_RADIUS = 5;
+    const float ENTITY_MAX_SPEED = 20;
+
+    // 2 inputs (temp, time)
+    // 2 outputs (speed, direction)
+    const std::vector<unsigned int> NET_LAYERS = {2, 3, 2};
 }
