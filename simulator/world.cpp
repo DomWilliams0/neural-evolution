@@ -34,7 +34,7 @@ void World::spawnEntity(const b2Vec2 &pos, float radius, b2Body **bodyOut, b2Fix
     // TODO userdata on body or fixture?
 
     b2CircleShape circle;
-    circle.m_p = pos;
+    circle.m_p.SetZero(); // relative to body
     circle.m_radius = static_cast<float32>(radius);
 
     b2FixtureDef fixtureDef;

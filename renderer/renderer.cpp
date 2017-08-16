@@ -47,6 +47,8 @@ void Renderer::tick(float dt) {
 }
 
 void Renderer::renderSimulation() {
+    sim.getPhysicsWorld().DrawDebugData();
+
     sim.entities.each<Physics>([this](entityx::Entity entity, Physics &physics) {
         sf::Color bodyColour(50, 40, 180);
         sf::Color velocityColour(250, 250, 255);
@@ -54,23 +56,23 @@ void Renderer::renderSimulation() {
         b2Vec2 pos(physics.getPosition());
         b2Vec2 vel(physics.getVelocity());
 
+        pos.x -= physics.radius;
+        pos.y -= physics.radius;
+
         // body
         sf::CircleShape circle(physics.radius, 10);
         circle.setFillColor(bodyColour);
         circle.setPosition(vec(pos));
         window.draw(circle);
 
-        // centre
         // velocity
         sf::Vertex velocity[2] = {
                 sf::Vertex({pos.x + physics.radius, pos.y + physics.radius}, velocityColour),
-                sf::Vertex({pos.x + vel.x + physics.radius, pos.y + vel.y + physics.radius}, velocityColour),
+                sf::Vertex({pos.x + physics.radius + vel.x, pos.y + physics.radius + vel.y}, velocityColour),
         };
         window.draw(velocity, 2, sf::Lines);
 
     });
-
-    sim.getPhysicsWorld().DrawDebugData();
 }
 
 inline sf::Color convertColour(const b2Color &c) {
