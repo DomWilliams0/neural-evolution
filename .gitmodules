@@ -1,3 +1,6 @@
 [submodule "simulator/lib/plog"]
 	path = simulator/lib/plog
 	url = https://github.com/SergiusTheBest/plog
+[submodule "simulator/lib/OpenNN"]
+	path = simulator/lib/OpenNN
+	url = https://github.com/Artelnics/OpenNN
