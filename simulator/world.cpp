@@ -1,9 +1,18 @@
 #include <vector>
+#include <noise/noise.h>
+
 #include "world.h"
 #include "config.h"
 
-World::World(b2Vec2 dims) : dims(dims), time(0), physWorld({0.0, 0.0}) {
 
+World::World(b2Vec2 dims) : dims(dims), time(0), physWorld({0.0, 0.0}), temperatureNoiseSeed(rand()),
+                            temperatureNoise(new noise::module::Perlin) {
+    temperatureNoise->SetFrequency(Config::TEMPERATURE_SCALE);
+    temperatureNoise->SetOctaveCount(2);
+}
+
+World::~World() {
+    delete temperatureNoise;
 }
 
 void World::tick(float dt) {
@@ -19,8 +28,7 @@ float World::getTime() const {
 }
 
 float World::getTemperature(const b2Vec2 &pos) const {
-    // TODO noise
-    return 0;
+    return static_cast<float>(temperatureNoise->GetValue(pos.x, pos.y, temperatureNoiseSeed));
 }
 
 b2Vec2 World::getDimensions() const {

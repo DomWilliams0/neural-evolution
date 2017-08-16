@@ -3,11 +3,20 @@
 
 #include <Box2D/Box2D.h>
 
+namespace noise {
+    namespace module {
+        class Perlin;
+    }
+}
+
 class World {
 
 protected:
     b2Vec2 dims;
     float time;
+
+    double temperatureNoiseSeed;
+    noise::module::Perlin *temperatureNoise;
 
     b2World physWorld;
 
@@ -25,6 +34,8 @@ public:
     void spawnEntity(const b2Vec2 &pos, float radius, b2Body **bodyOut, b2Fixture **fixtureOut);
 
     b2World &getPhysicsWorld();
+
+    virtual ~World();
 };
 
 

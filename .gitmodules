@@ -4,3 +4,6 @@
 [submodule "simulator/lib/OpenNN"]
 	path = simulator/lib/OpenNN
 	url = https://github.com/Artelnics/OpenNN
+[submodule "simulator/lib/libnoise"]
+	path = simulator/lib/libnoise
+	url = https://github.com/eXpl0it3r/libnoise

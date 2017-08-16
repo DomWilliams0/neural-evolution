@@ -8,6 +8,7 @@ namespace Config {
     extern const int WORLD_HEIGHT;
     extern const int TIME_GRANUALITY;
     extern const float TIME_GRANUALITY_RECIP;
+    extern const float TEMPERATURE_SCALE;
 
     // generations
     extern const int TIME_PER_GENERATION;

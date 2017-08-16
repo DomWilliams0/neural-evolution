@@ -29,3 +29,8 @@ target_compile_options(opennn PRIVATE "-w")
 
 # logger
 include_directories(lib/plog/include)
+
+# noise
+add_subdirectory(lib/libnoise)
+target_include_directories(${PROJECT_NAME} PUBLIC lib/libnoise/include)
+target_link_libraries(${PROJECT_NAME} libnoise)
