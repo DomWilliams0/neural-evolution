@@ -16,6 +16,9 @@ Simulator::Simulator() : world({Config::WORLD_WIDTH, Config::WORLD_HEIGHT}),
                          generationNumber(0) {
     initLogger();
 
+    // seed random for OpenNN
+    srand(time(NULL));
+
     // register systems
     systems.add<BrainSystem>();
     systems.add<NutritionSystem>();

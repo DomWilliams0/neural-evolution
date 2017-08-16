@@ -14,6 +14,11 @@ namespace Config {
     extern const float TOP_PROPORTION_TO_TAKE;
     extern const int GENERATION_SIZE;
 
+    // mutations
+    extern const float MUTATE_NORMAL_MEAN;
+    extern const float MUTATE_NORMAL_SD;
+    extern const float MUTATE_WEIGHT_CHANCE;
+
     // entity
     extern const float ENTITY_RADIUS;
 
