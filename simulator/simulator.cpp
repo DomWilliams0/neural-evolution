@@ -85,7 +85,8 @@ void Simulator::createEntitiesFromBrains(std::vector<EntityDef> &out, const std:
     // TODO cycle through brains and create
 
     for (int i = 0; i < 20; ++i)
-        out.emplace_back(entities.create(), b2Vec2(100 + i * 5, 100), &world, Config::ENTITY_RADIUS, new NeuralNetwork);
+        out.emplace_back(entities.create(), b2Vec2(100 + i * Config::ENTITY_RADIUS * 2, 100), &world,
+                         Config::ENTITY_RADIUS, new NeuralNetwork);
 }
 
 void Simulator::spawnEntities(const std::vector<EntityDef> &defs) {

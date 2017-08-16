@@ -12,6 +12,8 @@ struct Physics {
 
     inline b2Vec2 getPosition() const { return body->GetPosition(); }
 
+    inline b2Vec2 getVelocity() const { return body->GetLinearVelocity(); }
+
     b2Body *body;
     b2Fixture *fixture;
     float radius;

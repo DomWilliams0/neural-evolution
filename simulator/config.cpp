@@ -16,8 +16,8 @@ namespace Config {
     const float MUTATE_NORMAL_SD = 0.2; // variation
     const float MUTATE_WEIGHT_CHANCE = 0.04;
 
-    const float ENTITY_RADIUS = 5;
-    const float ENTITY_MAX_SPEED = 20;
+    const float ENTITY_RADIUS = 6;
+    const float ENTITY_MAX_SPEED = 50;
 
     // 2 inputs (temp, time)
     // 2 outputs (speed, direction)

@@ -8,8 +8,7 @@ World::World(b2Vec2 dims) : dims(dims), time(0), physWorld({0.0, 0.0}) {
 
 void World::tick(float dt) {
     // tick time
-    time += dt;
-    time = static_cast<int>(time) % Config::TIME_GRANUALITY;
+    time = static_cast<float>(fmod(time + dt, Config::TIME_GRANUALITY));
 
     // TODO depends on fast forward or not
     physWorld.Step(dt, 2, 2);
