@@ -23,6 +23,8 @@ public:
     b2Vec2 getDimensions() const;
 
     void spawnEntity(const b2Vec2 &pos, float radius, b2Body **bodyOut, b2Fixture **fixtureOut);
+
+    b2World &getPhysicsWorld();
 };
 
 

@@ -43,6 +43,9 @@ public:
     Simulator();
 
     void tick(float dt);
+
+    b2World &getPhysicsWorld();
+
 };
 
 

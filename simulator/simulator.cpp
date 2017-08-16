@@ -93,3 +93,7 @@ void Simulator::spawnEntities(const std::vector<EntityDef> &defs) {
     // on start of next tick
     queuedSpawns.insert(queuedSpawns.end(), defs.cbegin(), defs.cend());
 }
+
+b2World &Simulator::getPhysicsWorld() {
+    return world.getPhysicsWorld();
+}

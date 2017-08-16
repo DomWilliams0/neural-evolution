@@ -48,3 +48,7 @@ void World::spawnEntity(const b2Vec2 &pos, float radius, b2Body **bodyOut, b2Fix
     *bodyOut = physWorld.CreateBody(&bodyDef);
     *fixtureOut = (*bodyOut)->CreateFixture(&fixtureDef);
 }
+
+b2World &World::getPhysicsWorld() {
+    return physWorld;
+}
