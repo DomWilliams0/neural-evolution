@@ -4,9 +4,9 @@ project(neural-evolution)
 set(CMAKE_CXX_STANDARD 11)
 
 # debug
-if(CMAKE_BUILD_TYPE STREQUAL "")
+if (CMAKE_BUILD_TYPE STREQUAL "")
     set(CMAKE_BUILD_TYPE Debug)
-endif()
+endif ()
 
 # version
 set(PROJECT_VERSION_MAJOR 1)
@@ -17,9 +17,9 @@ add_executable(${PROJECT_NAME} main.cpp)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 add_subdirectory(simulator)
-include_directories(simulator/include)
+include_directories(simulator)
 target_link_libraries(${PROJECT_NAME} simulator)
 
 add_subdirectory(renderer)
-include_directories(renderer/include)
+include_directories(renderer)
 target_link_libraries(${PROJECT_NAME} renderer)

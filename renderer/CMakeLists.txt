@@ -2,28 +2,31 @@ cmake_minimum_required(VERSION 3.8)
 project(renderer)
 
 # sources
-file (GLOB SRC *.cpp *.h)
+file(GLOB SRC *.cpp *.h)
 
 # create lib
 add_library(${PROJECT_NAME} SHARED ${SRC})
 
+# simulator
+include_directories(${simulator_SOURCE_DIR})
+
 # sfml
 find_package(SFML REQUIRED system window graphics)
-if(SFML_FOUND)
+if (SFML_FOUND)
     include_directories(${SFML_INCLUDE_DIR})
     target_link_libraries(${PROJECT_NAME} ${SFML_LIBRARIES})
-endif()
+endif ()
 
 # box2d
 find_package(Box2D REQUIRED)
-if(BOX2D_FOUND)
+if (BOX2D_FOUND)
     include_directories(${BOX2D_INCLUDE_DIR})
     target_link_libraries(${PROJECT_NAME} ${BOX2D_LIBRARIES})
-endif()
+endif ()
 
 # entity
 find_package(EntityX REQUIRED)
-if(ENTITYX_FOUND)
+if (ENTITYX_FOUND)
     include_directories(${ENTITYX_INCLUDE_DIR})
     target_link_libraries(${PROJECT_NAME} ${ENTITYX_LIBRARIES})
-endif()
+endif ()

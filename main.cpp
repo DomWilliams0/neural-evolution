@@ -1,8 +1,11 @@
 #include "simulator/simulator.h"
+#include "renderer/renderer.h"
 
 int main() {
-    Simulator s;
-    while (true)
-        s.tick(0.1);
+    Simulator sim;
+    Renderer renderer(600, 600, sim);
+
+    renderer.run();
+
     return 0;
 }
