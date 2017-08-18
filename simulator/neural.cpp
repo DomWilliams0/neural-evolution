@@ -1,14 +1,10 @@
 #include <random>
-#include <plog/Log.h>
 #include "neural.h"
 #include "config.h"
 
 NeuralNetwork::NeuralNetwork(const std::vector<unsigned int> &layers) {
     OpenNN::Vector<size_t> architecture(layers.begin(), layers.end());
-    net.set(architecture);
-
-    // outputs 0-1
-    net.construct_probabilistic_layer();
+    setArchitecture(architecture);
 
     // random parameters/weights/biases
     net.randomize_parameters_normal();
@@ -40,6 +36,8 @@ void NeuralNetwork::copyAndMutate(NeuralNetwork *out) const {
     }
 
     out->net.set(net.arrange_architecture());
+    out->net.construct_probabilistic_layer();
+
     out->net.set_parameters(params);
 }
 
@@ -50,5 +48,12 @@ void NeuralNetwork::tick(const std::vector<double> &inputs, std::vector<double> 
 
 unsigned int NeuralNetwork::getInputCount() const {
     return net.get_inputs_number();
+}
+
+void NeuralNetwork::setArchitecture(const OpenNN::Vector<size_t> &layers) {
+    net.set(layers);
+
+    // 0-1 output
+    net.construct_probabilistic_layer();
 }
 
