@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.8)
 project(simulator)
 
+add_definitions(-Wall)
+
 # sources
 file(GLOB SRC *.cpp *.h)
 
@@ -22,7 +24,7 @@ if (ENTITYX_FOUND)
 endif ()
 
 # neural networks
-add_definitions(-w)
+#add_definitions(-w)
 add_subdirectory(lib/OpenNN/opennn)
 add_subdirectory(lib/OpenNN/tinyxml2)
 target_include_directories(${PROJECT_NAME} PUBLIC lib/OpenNN/opennn)
