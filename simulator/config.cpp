@@ -9,7 +9,7 @@ namespace Config {
     const float TIME_GRANUALITY_RECIP = static_cast<const float>(1.0 / TIME_GRANUALITY);
     const float TEMPERATURE_SCALE = 0.02; // smaller is more zoomed in
 
-    const int TIME_PER_GENERATION = 10;
+    const int TIME_PER_GENERATION = 1;
     const float TOP_PROPORTION_TO_TAKE = 0.2;
     const int GENERATION_SIZE = 10;
 

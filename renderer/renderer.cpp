@@ -2,10 +2,21 @@
 
 Renderer::Renderer(unsigned int width, unsigned int height, Simulator &sim) :
         window(sf::VideoMode(width, height), "Neural Evolution", sf::Style::None),
-        sim(sim), debugRenderer(window) {
+        sim(sim), debugRenderer(window), currentGeneration(0) {
 
     debugRenderer.AppendFlags(b2Draw::e_shapeBit);
     sim.getPhysicsWorld().SetDebugDraw(&debugRenderer);
+
+    if (!font.loadFromFile("renderer/font.ttf"))
+        throw std::runtime_error("Missing font.ttf");
+
+    generationLabel.setFont(font);
+    generationLabel.setFillColor(sf::Color::White);
+
+    unsigned int fontSize = 15;
+    unsigned int padding = 5;
+    generationLabel.setPosition(padding, Config::WORLD_HEIGHT - fontSize - padding);
+    generationLabel.setCharacterSize(fontSize);
 }
 
 void Renderer::run() {
@@ -43,7 +54,12 @@ void Renderer::tickAndRender(float dt) {
 
 void Renderer::tick(float dt) {
     sim.tick(dt);
-    // TODO check generation number and update label
+
+    unsigned int current = sim.getGenerationNumber();
+    if (current != currentGeneration) {
+        currentGeneration = current;
+        generationLabel.setString("Generation " + std::to_string(current));
+    }
 }
 
 void Renderer::renderSimulation() {
@@ -73,6 +89,8 @@ void Renderer::renderSimulation() {
         window.draw(velocity, 2, sf::Lines);
 
     });
+
+    window.draw(generationLabel);
 }
 
 inline sf::Color convertColour(const b2Color &c) {

@@ -14,7 +14,7 @@ void initLogger() {
 
 Simulator::Simulator() : world({Config::WORLD_WIDTH, Config::WORLD_HEIGHT}),
                          generationTime(Config::TIME_PER_GENERATION),
-                         generationNumber(0) {
+                         generationNumber(1) {
     initLogger();
 
     // seed random for OpenNN
@@ -138,4 +138,8 @@ void Simulator::spawnEntities(const std::vector<EntityDef> &defs) {
 
 b2World &Simulator::getPhysicsWorld() {
     return world.getPhysicsWorld();
+}
+
+unsigned int Simulator::getGenerationNumber() const {
+    return generationNumber;
 }

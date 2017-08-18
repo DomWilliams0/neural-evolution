@@ -28,10 +28,13 @@ public:
 class Renderer {
 protected:
     sf::RenderWindow window;
-    sf::Text generationLabel;
     PhysicsRenderer debugRenderer;
 
     Simulator &sim;
+
+    sf::Font font;
+    sf::Text generationLabel;
+    unsigned int currentGeneration;
 
     void tickAndRender(float dt);
 

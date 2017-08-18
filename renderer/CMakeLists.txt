@@ -30,3 +30,12 @@ if (ENTITYX_FOUND)
     include_directories(${ENTITYX_INCLUDE_DIR})
     target_link_libraries(${PROJECT_NAME} ${ENTITYX_LIBRARIES})
 endif ()
+
+# font
+set(FONT_SRC "${PROJECT_SOURCE_DIR}/font.ttf")
+set(FONT_DST "${CMAKE_CURRENT_BINARY_DIR}/font.ttf")
+add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E create_symlink ${FONT_SRC} ${FONT_DST}
+        DEPENDS ${FONT_DST}
+)

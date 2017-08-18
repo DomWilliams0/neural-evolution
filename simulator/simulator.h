@@ -29,7 +29,7 @@ protected:
     World world;
 
     float generationTime;
-    int generationNumber;
+    unsigned int generationNumber;
 
     std::vector<EntityDef> queuedSpawns;
 
@@ -45,6 +45,8 @@ public:
     void tick(float dt);
 
     b2World &getPhysicsWorld();
+
+    unsigned int getGenerationNumber() const;
 
 };
 
