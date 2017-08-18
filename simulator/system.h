@@ -15,14 +15,14 @@ protected:
     World *world;
 };
 
-struct NutritionSystem : public entityx::System<NutritionSystem>, public entityx::Receiver<NutritionSystem> {
+struct NutritionSystem : public entityx::System<NutritionSystem>, public EventHandler<EatEvent> {
     NutritionSystem(World *world) : world(world), foodTime(0) {}
 
     void configure(entityx::EntityManager &entities, entityx::EventManager &events) override;
 
     void update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) override;
 
-    void receive(const EatEvent &eat);
+    virtual void onEvent(EatEvent &eat) override;
 
 
     void reset();

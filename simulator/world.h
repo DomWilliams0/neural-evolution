@@ -26,7 +26,7 @@ protected:
     CollisionHandler *collisions;
 
 public:
-    World(entityx::EventManager &events);
+    World();
 
     void tick(float dt);
 

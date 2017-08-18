@@ -14,8 +14,7 @@ void initLogger() {
 }
 
 
-Simulator::Simulator() : world(events),
-                         generationTime(Config::TIME_PER_GENERATION),
+Simulator::Simulator() : generationTime(Config::TIME_PER_GENERATION),
                          generationNumber(1) {
     initLogger();
 

@@ -1,5 +1,6 @@
 
 #include <noise/noise.h>
+#include <plog/Log.h>
 
 #include "collision.h"
 #include "world.h"
@@ -7,8 +8,8 @@
 #include "event.h"
 
 
-World::World(entityx::EventManager &events) : dims(dims), time(0), physWorld({0.0, 0.0}), temperatureNoiseSeed(rand() * dims.x * dims.y),
-                            temperatureNoise(new noise::module::Perlin), collisions(new CollisionHandler(events)) {
+World::World() : dims(dims), time(0), physWorld({0.0, 0.0}), temperatureNoiseSeed(rand() * dims.x * dims.y),
+                 temperatureNoise(new noise::module::Perlin), collisions(new CollisionHandler()) {
     temperatureNoise->SetFrequency(Config::TEMPERATURE_SCALE);
     temperatureNoise->SetOctaveCount(2);
 
@@ -31,6 +32,17 @@ void World::tick(float dt) {
     time = static_cast<float>(fmod(time + dt, Config::TIME_GRANUALITY));
 
     physWorld.Step(dt, 2, 2);
+
+    // remove all eaten food
+    b2Fixture *f = foodFrame->GetFixtureList();
+    while (f != nullptr) {
+        b2Fixture *next = f->GetNext();
+        if (!((UserData *) f->GetUserData())->nutrition.edible) {
+            foodFrame->DestroyFixture(f);
+            LOGI << "deleted fodo";
+        }
+        f = next;
+    }
 }
 
 float World::getTime() const {
@@ -129,8 +141,9 @@ void CollisionHandler::BeginContact(b2Contact *contact) {
 
     if (collision == ENTITY_AND_FOOD) {
         entityx::Entity e(a->type == EntityType::ENTITY ? a->entity : b->entity);
-        Nutrition n(a->type == EntityType::FOOD ? a->nutrition : b->nutrition);
+        Nutrition &n(a->type == EntityType::FOOD ? a->nutrition : b->nutrition);
+        Consumer &c(*e.component<Consumer>());
 
-        events.emit<EatEvent>(*e.component<Consumer>(), n);
+        emit<EatEvent>(c, n);
     }
 }

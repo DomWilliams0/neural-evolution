@@ -37,3 +37,9 @@ include_directories(lib/plog/include)
 add_subdirectory(lib/libnoise)
 target_include_directories(${PROJECT_NAME} PUBLIC lib/libnoise/include)
 target_link_libraries(${PROJECT_NAME} libnoise)
+
+# events
+include_directories(lib/EventBus/src)
+file(GLOB EVENTBUS_SRC lib/EventBus/src/event/*)
+add_library(EventBus SHARED ${EVENTBUS_SRC})
+target_link_libraries(${PROJECT_NAME} EventBus)

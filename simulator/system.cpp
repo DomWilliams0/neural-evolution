@@ -29,7 +29,7 @@ void BrainSystem::update(entityx::EntityManager &entities, entityx::EventManager
 
 
 void NutritionSystem::configure(entityx::EntityManager &entities, entityx::EventManager &events) {
-    events.subscribe<EatEvent>(*this);
+    subscribe(this);
 }
 
 void NutritionSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
@@ -44,13 +44,16 @@ void NutritionSystem::update(entityx::EntityManager &entities, entityx::EventMan
 
 }
 
-void NutritionSystem::receive(const EatEvent &eat) {
-    const Consumer &consumer = eat.consumer;
-    const Nutrition &nutrition = eat.nutrition;
+void NutritionSystem::onEvent(EatEvent &eat) {
+    Consumer &consumer = eat.consumer;
+    Nutrition &nutrition = eat.nutrition;
 
-    // TODO these need to be not const!
-    // consumer.totalEaten += nutrition.nutrition;
-    // nutrition.edible = false;
+    if (nutrition.edible) {
+        consumer.totalEaten += nutrition.nutrition;
+        nutrition.edible = false;
+        LOGI << consumer.totalEaten << " ate " << &nutrition;
+    }
+
 }
 
 void NutritionSystem::spawnRandomFood() {

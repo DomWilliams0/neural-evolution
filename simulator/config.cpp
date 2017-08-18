@@ -26,7 +26,7 @@ namespace Config {
     // 2 outputs (speed, direction)
     const std::vector<unsigned int> NET_LAYERS = {2, 3, 2};
 
-    const float INITIAL_FOOD_SIMULATION = 5; // seconds, so count = this/FOOD_SPAWN_RATE
+    const float INITIAL_FOOD_SIMULATION = 8; // seconds, so count = this/FOOD_SPAWN_RATE
     const float FOOD_NUTRITION = 2;
     const float FOOD_SPAWN_RATE = 0.2; // seconds
     const bool KEEP_SPAWNING_FOOD = true;

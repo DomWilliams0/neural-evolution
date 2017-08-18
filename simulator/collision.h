@@ -21,12 +21,7 @@ struct UserData {
 
 class CollisionHandler : public b2ContactListener {
 public:
-    CollisionHandler(entityx::EventManager &events) : events(events) {}
-
     void BeginContact(b2Contact *contact) override;
-
-protected:
-    entityx::EventManager &events;
 };
 
 
