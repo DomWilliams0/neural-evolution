@@ -40,6 +40,9 @@ struct SensorSystem : public entityx::System<SensorSystem>, public EventHandler<
 
     void onEvent(FoodSenseEvent &t) override;
 
+protected:
+    float dt;
+
 };
 
 #endif

@@ -35,11 +35,12 @@ struct Brain {
 };
 
 struct FoodSensor {
-    FoodSensor(float angle, float length) : angle(angle), length(length), activated(false) {}
+    FoodSensor(float angle, float length) : angle(angle), length(length), activatedFor(0) {}
+    inline bool activated() const { return activatedFor > 0; }
 
     float angle;
     float length;
-    bool activated;
+    float activatedFor;
 };
 
 

@@ -17,23 +17,29 @@ void SensorSystem::configure(entityx::EntityManager &entities, entityx::EventMan
 
 
 void BrainSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
-    entities.each<Brain, Physics>([this](entityx::Entity entity, Brain &brain, Physics &physics) {
-        // gather inputs
-        float time = world->getTime();
-        float temp = world->getTemperature(physics.getPosition());
-        std::vector<double> inputs = {time, temp};
+    entities.each<Brain, Physics, FoodSensor>(
+            [this](entityx::Entity entity, Brain &brain, Physics &physics, FoodSensor &sensor) {
+                // gather inputs
+                float time = world->getTime();
+                float temp = world->getTemperature(physics.getPosition());
+                float foodSensor = sensor.activatedFor == 0 ? 0.f : std::max(1.f, sensor.activatedFor);
 
-        // feed forward
-        std::vector<double> outputs;
-        brain.network->tick(inputs, outputs);
+                std::vector<double> inputs = {time, temp, foodSensor};
 
-        // parse outputs
-        float speed = outputs[0] * Config::ENTITY_MAX_SPEED;
-        float direction = static_cast<float>(outputs[1] * 360.f);
+                // feed forward
+                std::vector<double> outputs;
+                brain.network->tick(inputs, outputs);
 
-        // set from outputs
-        physics.body->SetLinearVelocity(vecFromDegrees(direction, speed));
-        physics.body->SetTransform(physics.body->GetPosition(), static_cast<float32>(direction * DEG_TO_RAD));
+                // parse outputs
+                float speed = static_cast<float>(outputs[0]) * Config::ENTITY_FORCE;
+                if (abs(speed) > Config::MAX_ENTITY_FORCE)
+                    speed = Config::MAX_ENTITY_FORCE * std::signbit(speed);
+
+                float direction = static_cast<float>(outputs[1] * 360.f);
+
+                // set from outputs
+                physics.body->SetLinearVelocity(vecFromDegrees(direction, speed));
+                physics.body->SetTransform(physics.body->GetPosition(), static_cast<float32>(direction * DEG_TO_RAD));
     });
 }
 
@@ -50,7 +56,7 @@ void NutritionSystem::update(entityx::EntityManager &entities, entityx::EventMan
 }
 
 void SensorSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
-
+    this->dt = static_cast<float>(dt);
 }
 
 void NutritionSystem::onEvent(EatEvent &eat) {
@@ -64,7 +70,7 @@ void NutritionSystem::onEvent(EatEvent &eat) {
 
 }
 void SensorSystem::onEvent(FoodSenseEvent &sense) {
-    sense.sensor.activated = sense.stimulated;
+    sense.sensor.activatedFor = sense.stimulated ? sense.sensor.activatedFor + dt : 0;
 }
 
 
