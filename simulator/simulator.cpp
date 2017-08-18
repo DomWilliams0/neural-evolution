@@ -5,7 +5,6 @@
 #include "simulator.h"
 #include "system.h"
 #include "neural.h"
-#include "util.h"
 #include "collision.h"
 
 void initLogger() {
@@ -81,21 +80,13 @@ void Simulator::tick(float dt) {
     systems.update_all(dt);
 }
 
-// arbitrarily distance to 400, 400
 float fitnessFunction(entityx::Entity &entity) {
-    b2Vec2 target(400, 400);
-    b2Vec2 current(entity.component<Physics>()->getPosition());
-
-    return (target - current).LengthSquared();
+    return entity.component<Consumer>()->totalEaten;
 }
 
 void Simulator::startNewGeneration() {
     // reset clock
     generationTime = Config::TIME_PER_GENERATION;
-
-    generationNumber += 1;
-
-    LOG_INFO << "New generation " << generationNumber;
 
     typedef std::pair<entityx::Entity, NeuralNetwork *> BrainPair;
 
@@ -108,16 +99,21 @@ void Simulator::startNewGeneration() {
     // sort to find fittest
     // TODO what if numToTake > entity count?
     unsigned int numToTake = static_cast<unsigned int>(Config::TOP_PROPORTION_TO_TAKE * entities.size());
-    std::partial_sort(allEntities.begin(), allEntities.begin() + numToTake, allEntities.end(),
-                      [](BrainPair &a, BrainPair &b) {
-                          return fitnessFunction(a.first) < fitnessFunction(b.first);
+    std::sort(allEntities.begin(), allEntities.end(),
+              [](BrainPair &a, BrainPair &b) {
+                  return fitnessFunction(a.first) > fitnessFunction(b.first);
                       });
+
+    if (!allEntities.empty()) {
+        LOGI << "Most food collected in generation " << generationNumber << ": "
+             << fitnessFunction(allEntities[0].first);
+    }
 
     // extract their brains
     std::vector<NeuralNetwork *> topBrains;
     topBrains.reserve(numToTake);
-    for (BrainPair &e : allEntities) {
-        topBrains.push_back(e.second);
+    for (size_t i = 0; i < numToTake && i < allEntities.size(); ++i) {
+        topBrains.push_back(allEntities[i].second);
     }
 
     // reset the world
@@ -134,6 +130,9 @@ void Simulator::startNewGeneration() {
     // delete old brains
     for (NeuralNetwork *&brain : topBrains)
         delete brain;
+
+    generationNumber += 1;
+    LOG_DEBUG << "New generation " << generationNumber;
 }
 
 void Simulator::createEntitiesFromBrains(std::vector<EntityDef> &out, const std::vector<NeuralNetwork *> &brains) {
