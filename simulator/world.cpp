@@ -39,7 +39,6 @@ void World::tick(float dt) {
         b2Fixture *next = f->GetNext();
         if (!((UserData *) f->GetUserData())->nutrition.edible) {
             foodFrame->DestroyFixture(f);
-            LOGI << "deleted fodo";
         }
         f = next;
     }

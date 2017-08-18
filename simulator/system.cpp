@@ -51,7 +51,6 @@ void NutritionSystem::onEvent(EatEvent &eat) {
     if (nutrition.edible) {
         consumer.totalEaten += nutrition.nutrition;
         nutrition.edible = false;
-        LOGI << consumer.totalEaten << " ate " << &nutrition;
     }
 
 }
