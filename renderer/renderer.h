@@ -31,14 +31,19 @@ protected:
     PhysicsRenderer debugRenderer;
 
     Simulator &sim;
+    bool fastForward;
+
+    void (Renderer::*renderer)();
 
     sf::Font font;
     sf::Text generationLabel;
     unsigned int currentGeneration;
 
-    void tickAndRender(float dt);
+    void setFastForward(bool ff);
 
     void tick(float dt);
+
+    void renderFastForward();
 
     void renderSimulation();
 

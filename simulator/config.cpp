@@ -12,6 +12,7 @@ namespace Config {
     const int TIME_PER_GENERATION = 1;
     const float TOP_PROPORTION_TO_TAKE = 0.2;
     const int GENERATION_SIZE = 10;
+    const float FAST_FORWARD_TIME_SCALE = 10; // may fuck physics if too fast
 
     const float MUTATE_NORMAL_MEAN = 0.0; // middle value
     const float MUTATE_NORMAL_SD = 0.2; // variation
@@ -23,4 +24,7 @@ namespace Config {
     // 2 inputs (temp, time)
     // 2 outputs (speed, direction)
     const std::vector<unsigned int> NET_LAYERS = {2, 3, 2};
+
+    const unsigned int FONT_SIZE_NORMAL_SPEED = 15;
+    const unsigned int FONT_SIZE_FAST_FORWARD = 40;
 }

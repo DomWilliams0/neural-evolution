@@ -13,10 +13,8 @@ Renderer::Renderer(unsigned int width, unsigned int height, Simulator &sim) :
     generationLabel.setFont(font);
     generationLabel.setFillColor(sf::Color::White);
 
-    unsigned int fontSize = 15;
-    unsigned int padding = 5;
-    generationLabel.setPosition(padding, Config::WORLD_HEIGHT - fontSize - padding);
-    generationLabel.setCharacterSize(fontSize);
+    // sets renderer
+    setFastForward(false);
 }
 
 void Renderer::run() {
@@ -28,6 +26,9 @@ void Renderer::run() {
                 case sf::Event::Closed:
                     window.close();
                     break;
+                case sf::Event::KeyPressed:
+                    if (event.key.code == sf::Keyboard::Space)
+                        setFastForward(!fastForward);
 
                 default:
                     break;
@@ -37,7 +38,8 @@ void Renderer::run() {
         window.clear();
 
         float dt(clock.restart().asSeconds());
-        tickAndRender(dt);
+        tick(dt);
+        (this->*renderer)();
 
         window.display();
     }
@@ -47,12 +49,28 @@ static sf::Vector2f vec(const b2Vec2 &b2) {
     return {b2.x, b2.y};
 }
 
-void Renderer::tickAndRender(float dt) {
-    tick(dt);
-    renderSimulation();
+
+void Renderer::setFastForward(bool ff) {
+    fastForward = ff;
+    if (fastForward) {
+        sim.setTimeScale(Config::FAST_FORWARD_TIME_SCALE);
+        renderer = &Renderer::renderFastForward;
+        generationLabel.setCharacterSize(Config::FONT_SIZE_FAST_FORWARD);
+        sf::Vector2f pos(window.getSize().x / 2, window.getSize().y / 2);
+        sf::FloatRect bounds(generationLabel.getLocalBounds());
+        pos.x -= bounds.width / 2;
+        pos.y -= bounds.height / 2;
+        generationLabel.setPosition(pos);
+    } else {
+        sim.setTimeScale(1);
+        renderer = &Renderer::renderSimulation;
+        generationLabel.setCharacterSize(Config::FONT_SIZE_NORMAL_SPEED);
+        generationLabel.setPosition(5, Config::WORLD_HEIGHT - Config::FONT_SIZE_NORMAL_SPEED - 5);
+    }
 }
 
 void Renderer::tick(float dt) {
+    printf("fps %f\n", 1 / dt);
     sim.tick(dt);
 
     unsigned int current = sim.getGenerationNumber();
@@ -90,6 +108,10 @@ void Renderer::renderSimulation() {
 
     });
 
+    window.draw(generationLabel);
+}
+
+void Renderer::renderFastForward() {
     window.draw(generationLabel);
 }
 

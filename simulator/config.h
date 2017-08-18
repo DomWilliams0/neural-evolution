@@ -14,6 +14,7 @@ namespace Config {
     extern const int TIME_PER_GENERATION;
     extern const float TOP_PROPORTION_TO_TAKE;
     extern const int GENERATION_SIZE;
+    extern const float FAST_FORWARD_TIME_SCALE;
 
     // mutations
     extern const float MUTATE_NORMAL_MEAN;
@@ -25,6 +26,9 @@ namespace Config {
     extern const float ENTITY_MAX_SPEED;
     extern const std::vector<unsigned int> NET_LAYERS;
 
+    // renderer
+    extern const unsigned int FONT_SIZE_NORMAL_SPEED;
+    extern const unsigned int FONT_SIZE_FAST_FORWARD;
 }
 
 #endif
