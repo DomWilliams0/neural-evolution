@@ -10,3 +10,6 @@
 [submodule "simulator/lib/EventBus"]
 	path = simulator/lib/EventBus
 	url = https://github.com/danquist/EventBus
+[submodule "simulator/lib/entityx"]
+	path = simulator/lib/entityx
+	url = https://github.com/alecthomas/entityx/

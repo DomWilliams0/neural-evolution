@@ -25,11 +25,7 @@ if (BOX2D_FOUND)
 endif ()
 
 # entity
-find_package(EntityX REQUIRED)
-if (ENTITYX_FOUND)
-    include_directories(${ENTITYX_INCLUDE_DIR})
-    target_link_libraries(${PROJECT_NAME} ${ENTITYX_LIBRARIES})
-endif ()
+target_link_libraries(${PROJECT_NAME} entityx)
 
 # font
 set(FONT_SRC "${PROJECT_SOURCE_DIR}/font.ttf")
