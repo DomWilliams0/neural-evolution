@@ -8,8 +8,6 @@ class NeuralNetwork {
 protected:
     OpenNN::NeuralNetwork net;
 
-    void setArchitecture(const OpenNN::Vector<size_t> &layers);
-
 public:
     NeuralNetwork(const std::vector<unsigned int> &layers);
 

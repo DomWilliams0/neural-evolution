@@ -4,7 +4,10 @@
 
 NeuralNetwork::NeuralNetwork(const std::vector<unsigned int> &layers) {
     OpenNN::Vector<size_t> architecture(layers.begin(), layers.end());
-    setArchitecture(architecture);
+    net.set(architecture);
+
+    // 0-1 output
+    net.construct_probabilistic_layer();
 
     // random parameters/weights/biases
     net.randomize_parameters_normal();
@@ -23,7 +26,8 @@ void NeuralNetwork::copyAndMutate(NeuralNetwork *out) const {
     static std::uniform_real_distribution<> dis_uniform(0, 1);
     static std::normal_distribution<> dis_normal(Config::MUTATE_NORMAL_MEAN, Config::MUTATE_NORMAL_SD);
 
-    OpenNN::Vector<double> params = net.arrange_parameters();
+    out->net.set(net);
+    OpenNN::Vector<double> params = out->net.arrange_parameters();
 
     // mutate randomly
     for (auto it = params.begin(); it != params.end(); ++it) {
@@ -34,11 +38,6 @@ void NeuralNetwork::copyAndMutate(NeuralNetwork *out) const {
         double variation = dis_normal(gen_normal);
         *it += variation;
     }
-
-    out->net.set(net.arrange_architecture());
-    out->net.construct_probabilistic_layer();
-
-    out->net.set_parameters(params);
 }
 
 void NeuralNetwork::tick(const std::vector<double> &inputs, std::vector<double> &outputs) {
@@ -48,12 +47,5 @@ void NeuralNetwork::tick(const std::vector<double> &inputs, std::vector<double> 
 
 unsigned int NeuralNetwork::getInputCount() const {
     return net.get_inputs_number();
-}
-
-void NeuralNetwork::setArchitecture(const OpenNN::Vector<size_t> &layers) {
-    net.set(layers);
-
-    // 0-1 output
-    net.construct_probabilistic_layer();
 }
 
