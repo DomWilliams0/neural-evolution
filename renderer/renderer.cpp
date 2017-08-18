@@ -128,7 +128,7 @@ void Renderer::renderSimulation() {
         // sensor
         VecPair sensorRelativeVertices(
                 calculateSensorVertices(sensor.angle + physics.getAngle(), sensor.length, physics.radius));
-        sf::Color &sensorColour = sensor.activated ? sensorColourOn : sensorColourOff;
+        sf::Color &sensorColour = sensor.activated() ? sensorColourOn : sensorColourOff;
         sf::Vertex sensorVertices[2] = {
                 sf::Vertex({sensorRelativeVertices.first.x + pos.x + physics.radius,
                             sensorRelativeVertices.first.y + pos.y + physics.radius}, sensorColour),
