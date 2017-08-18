@@ -1,4 +1,5 @@
 #include <random>
+#include <plog/Log.h>
 #include "neural.h"
 #include "config.h"
 

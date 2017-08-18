@@ -36,6 +36,8 @@ public:
     b2World &getPhysicsWorld();
 
     virtual ~World();
+
+    void reset();
 };
 
 

@@ -60,3 +60,18 @@ void World::spawnEntity(const b2Vec2 &pos, float radius, b2Body **bodyOut, b2Fix
 b2World &World::getPhysicsWorld() {
     return physWorld;
 }
+
+void World::reset() {
+    // remove all dynamic bodies
+    b2Body *b = physWorld.GetBodyList();
+    while (b != nullptr) {
+        b2Body *next = b->GetNext();
+        if (b->GetType() == b2_dynamicBody) {
+            physWorld.DestroyBody(b);
+        }
+        b = next;
+    }
+
+    // reset timers
+    time = 0;
+}

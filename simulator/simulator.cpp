@@ -57,6 +57,14 @@ void Simulator::tick(float dt) {
     systems.update_all(dt);
 }
 
+// arbitrarily distance to 400, 400
+float fitnessFunction(entityx::Entity &entity) {
+    b2Vec2 target(400, 400);
+    b2Vec2 current(entity.component<Physics>()->getPosition());
+
+    return (target - current).LengthSquared();
+}
+
 void Simulator::startNewGeneration() {
     // reset clock
     generationTime = Config::TIME_PER_GENERATION;
@@ -65,28 +73,62 @@ void Simulator::startNewGeneration() {
 
     LOG_INFO << "New generation " << generationNumber;
 
-    // collect fittest brains
-    // TODO pointer should be to the neural net, NOT the brain component
-    std::vector<Brain *> fittestBrains;
-    // TODO sort and collect
+    typedef std::pair<entityx::Entity, NeuralNetwork *> BrainPair;
+
+    // collect all entities with brains
+    std::vector<BrainPair> allEntities;
+    entities.each<Brain>([this, &allEntities](entityx::Entity entity, Brain &b) {
+        allEntities.emplace_back(entity, b.network);
+    });
+
+    // sort to find fittest
+    // TODO what if numToTake > entity count?
+    unsigned int numToTake = static_cast<unsigned int>(Config::TOP_PROPORTION_TO_TAKE * entities.size());
+    std::partial_sort(allEntities.begin(), allEntities.begin() + numToTake, allEntities.end(),
+                      [](BrainPair &a, BrainPair &b) {
+                          return fitnessFunction(a.first) < fitnessFunction(b.first);
+                      });
+
+    // extract their brains
+    std::vector<NeuralNetwork *> topBrains;
+    topBrains.reserve(numToTake);
+    for (BrainPair &e : allEntities) {
+        topBrains.push_back(e.second);
+    }
 
     // reset the world
+    // don't access old entities from now on
+    world.reset();
+    entities.reset();
 
-    // mutate and add back to world
-    std::vector<NeuralNetwork *> mutatedBrains;
-    // TODO copy, mutate and delete old fit brains
-
+    // create a new generation from top, mutated brains
     std::vector<EntityDef> newGeneration;
-    createEntitiesFromBrains(newGeneration, mutatedBrains);
+    createEntitiesFromBrains(newGeneration, topBrains);
     spawnEntities(newGeneration);
+
+    // delete old brains
+    for (NeuralNetwork *& brain : topBrains)
+        delete brain;
 }
 
 void Simulator::createEntitiesFromBrains(std::vector<EntityDef> &out, const std::vector<NeuralNetwork *> &brains) {
-    // TODO cycle through brains and create
 
-    for (int i = 0; i < 20; ++i)
-        out.emplace_back(entities.create(), b2Vec2(100 + i * Config::ENTITY_RADIUS * 2, 100), &world,
-                         Config::ENTITY_RADIUS, new NeuralNetwork);
+    for (int i = 0; i < Config::GENERATION_SIZE; ++i) {
+        NeuralNetwork *newBrain = new NeuralNetwork;
+        if (!brains.empty()) {
+            NeuralNetwork *fitBrain = brains[i % brains.size()];
+            fitBrain->copyAndMutate(newBrain);
+        }
+
+        float radius = Config::ENTITY_RADIUS;
+        b2Vec2 randomPos(
+                radius + (rand() % Config::WORLD_WIDTH) - radius - radius,
+                radius + (rand() % Config::WORLD_HEIGHT) - radius - radius
+        );
+
+        EntityDef def(entities.create(), randomPos, &world, radius, newBrain);
+        out.push_back(def);
+    }
 }
 
 void Simulator::spawnEntities(const std::vector<EntityDef> &defs) {
