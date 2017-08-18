@@ -50,7 +50,6 @@ void Simulator::tick(float dt) {
         b2Fixture *fixture = nullptr;
         def.world->spawnEntity(def.pos, def.radius, &body, &fixture);
         def.id.assign<Physics>(body, fixture, def.radius);
-        LOGD << "Spawning new entity at (" << def.pos.x << ", " << def.pos.y << ")";
     }
     queuedSpawns.clear();
 
