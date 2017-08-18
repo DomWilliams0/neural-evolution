@@ -23,3 +23,17 @@ b2Vec2 randomPosition(float radius) {
             radius + (rand() % Config::WORLD_HEIGHT) - radius - radius
     };
 }
+
+float interpolate(float value, std::pair<float, float> oldLimits, std::pair<float, float> newLimits) {
+    float oldRange = oldLimits.second - oldLimits.first;
+    float newRange = newLimits.second - newLimits.first;
+    return (((value - oldLimits.first) * newRange) / oldRange) + newLimits.first;
+}
+
+VecPair calculateSensorVertices(float angle, float length, float offset) {
+    b2Vec2 direction = vecFromDegrees(angle, 1);
+    return {
+            b2Vec2(direction.x * offset, direction.y * offset),
+            b2Vec2(direction.x * (offset + length), direction.y * (offset + length))
+    };
+}

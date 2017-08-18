@@ -4,11 +4,6 @@
 #include <entityx/Entity.h>
 #include "component.h"
 
-enum EntityType {
-    ENTITY = 1 << 0,
-    FOOD = 1 << 1
-};
-
 struct UserData {
     UserData(EntityType type) : type(type) {}
 

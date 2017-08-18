@@ -29,6 +29,7 @@ namespace Config {
     extern const float ENTITY_RADIUS;
     extern const float ENTITY_MAX_SPEED;
     extern const std::vector<unsigned int> NET_LAYERS;
+    extern const std::pair<float, float> SENSOR_LENGTH_RANGE;
 
     // food
     // TODO nutrition range

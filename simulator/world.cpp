@@ -6,6 +6,7 @@
 #include "world.h"
 #include "config.h"
 #include "event.h"
+#include "component.h"
 
 
 World::World() : dims(dims), time(0), physWorld({0.0, 0.0}), temperatureNoiseSeed(rand() * dims.x * dims.y),

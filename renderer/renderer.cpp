@@ -1,3 +1,4 @@
+#include <util.h>
 #include "renderer.h"
 
 Renderer::Renderer(unsigned int width, unsigned int height, Simulator &sim) :
@@ -78,11 +79,12 @@ void Renderer::tick(float dt) {
 }
 
 void Renderer::renderSimulation() {
-    sim.getPhysicsWorld().DrawDebugData();
+//    sim.getPhysicsWorld().DrawDebugData();
 
-    sim.entities.each<Physics>([this](entityx::Entity entity, Physics &physics) {
+    sim.entities.each<Physics, FoodSensor>([this](entityx::Entity entity, Physics &physics, FoodSensor &sensor) {
         sf::Color bodyColour(50, 40, 180);
         sf::Color velocityColour(250, 250, 255);
+        sf::Color sensorColour(40, 150, 100);
 
         b2Vec2 pos(physics.getPosition());
         b2Vec2 vel(physics.getVelocity());
@@ -95,6 +97,17 @@ void Renderer::renderSimulation() {
         circle.setFillColor(bodyColour);
         circle.setPosition(vec(pos));
         window.draw(circle);
+
+        // sensor
+        VecPair sensorRelativeVertices(
+                calculateSensorVertices(sensor.angle + physics.getAngle(), sensor.length, physics.radius));
+        sf::Vertex sensorVertices[2] = {
+                sf::Vertex({sensorRelativeVertices.first.x + pos.x + physics.radius,
+                            sensorRelativeVertices.first.y + pos.y + physics.radius}, sensorColour),
+                sf::Vertex({sensorRelativeVertices.second.x + pos.x + physics.radius,
+                            sensorRelativeVertices.second.y + pos.y + physics.radius}, sensorColour)
+        };
+        window.draw(sensorVertices, 2, sf::Lines);
 
         // velocity
         sf::Vertex velocity[2] = {

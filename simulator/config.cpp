@@ -25,6 +25,7 @@ namespace Config {
     // 2 inputs (temp, time)
     // 2 outputs (speed, direction)
     const std::vector<unsigned int> NET_LAYERS = {2, 3, 2};
+    const std::pair<float, float> SENSOR_LENGTH_RANGE = {8, 16};
 
     const float INITIAL_FOOD_SIMULATION = 8; // seconds, so count = this/FOOD_SPAWN_RATE
     const float FOOD_NUTRITION = 2;

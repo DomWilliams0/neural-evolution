@@ -31,6 +31,27 @@ Simulator::Simulator() : generationTime(Config::TIME_PER_GENERATION),
     startNewGeneration();
 }
 
+static void addSensor(entityx::Entity &entity, float angle, float length) {
+    float realAngle = angle * 360.f;
+    float realLength = interpolate(length, {0.f, 1.f}, Config::SENSOR_LENGTH_RANGE);
+
+    entity.assign<FoodSensor>(realAngle, realLength);
+
+    entityx::ComponentHandle<Physics> phys = entity.component<Physics>();
+    std::pair<b2Vec2, b2Vec2> vertices(calculateSensorVertices(realAngle, realLength, phys->radius));
+
+    b2EdgeShape edge;
+    edge.Set(vertices.first, vertices.second);
+    LOGD << vertices.first.x << " " << vertices.first.y << " | " << vertices.second.x << " " << vertices.second.y << " : " << realLength << " " << realAngle;
+
+    b2FixtureDef def;
+    def.userData = new UserData(EntityType::SENSOR);
+    def.shape = &edge;
+    def.isSensor = true;
+
+    phys->body->CreateFixture(&def);
+}
+
 void Simulator::tick(float dt) {
     generationTime -= dt;
 
@@ -48,6 +69,8 @@ void Simulator::tick(float dt) {
         def.world->spawnEntity(def.pos, def.radius, &body, &fixture);
         def.id.assign<Physics>(body, fixture, def.radius);
         ((UserData *) fixture->GetUserData())->entity = def.id;
+
+        addSensor(def.id, 0.25, 0.5);
     }
     queuedSpawns.clear();
 
