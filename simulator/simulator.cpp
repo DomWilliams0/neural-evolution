@@ -15,7 +15,7 @@ void initLogger() {
 
 
 Simulator::Simulator() : generationTime(Config::TIME_PER_GENERATION),
-                         generationNumber(1) {
+                         generationNumber(0) {
     initLogger();
 
     // seed random for OpenNN
