@@ -38,7 +38,8 @@ void Renderer::run() {
             }
         }
 
-        window.clear();
+        sf::Color clear(85, 98, 100);
+        window.clear(clear);
 
         float dt(clock.restart().asSeconds());
         tick(dt);
@@ -83,12 +84,14 @@ void Renderer::tick(float dt) {
 void Renderer::renderSimulation() {
 //    sim.getPhysicsWorld().DrawDebugData();
 
-    sf::Color foodColour(150, 220, 140);
+    sf::Color foodColour(154, 185, 153);
     const b2Fixture *food = sim.getWorld().listFood();
     while (food != nullptr) {
         b2CircleShape *foodCircle = (b2CircleShape *) food->GetShape();
-        sf::CircleShape circle(foodCircle->m_radius, 10);
+        sf::CircleShape circle(foodCircle->m_radius, 30);
         circle.setFillColor(foodColour);
+        circle.setOutlineColor({0, 0, 0});
+        circle.setOutlineThickness(1);
         circle.setPosition(vec(foodCircle->m_p));
         window.draw(circle);
         food = food->GetNext();
@@ -96,10 +99,10 @@ void Renderer::renderSimulation() {
 
 
     sim.entities.each<Physics, FoodSensor>([this](entityx::Entity entity, Physics &physics, FoodSensor &sensor) {
-        sf::Color bodyColour(50, 40, 180);
-        sf::Color velocityColour(250, 250, 255);
-        sf::Color sensorColourOff(40, 150, 100);
-        sf::Color sensorColourOn(180, 40, 100);
+        sf::Color bodyColour(231, 219, 151);
+        sf::Color velocityColour(231, 219, 151);
+        sf::Color sensorColourOff(39, 54, 59);
+        sf::Color sensorColourOn(235, 73, 96);
 
         b2Vec2 pos(physics.getPosition());
         b2Vec2 vel(physics.getVelocity());
@@ -107,9 +110,18 @@ void Renderer::renderSimulation() {
         pos.x -= physics.radius;
         pos.y -= physics.radius;
 
+        // velocity
+        sf::Vertex velocity[2] = {
+                sf::Vertex({pos.x + physics.radius, pos.y + physics.radius}, velocityColour),
+                sf::Vertex({pos.x + physics.radius + vel.x, pos.y + physics.radius + vel.y}, velocityColour),
+        };
+        window.draw(velocity, 2, sf::Lines);
+
         // body
-        sf::CircleShape circle(physics.radius, 10);
+        sf::CircleShape circle(physics.radius, 30);
         circle.setFillColor(bodyColour);
+        circle.setOutlineColor({0, 0, 0});
+        circle.setOutlineThickness(1);
         circle.setPosition(vec(pos));
         window.draw(circle);
 
@@ -124,13 +136,6 @@ void Renderer::renderSimulation() {
                             sensorRelativeVertices.second.y + pos.y + physics.radius}, sensorColour)
         };
         window.draw(sensorVertices, 2, sf::Lines);
-
-        // velocity
-        sf::Vertex velocity[2] = {
-                sf::Vertex({pos.x + physics.radius, pos.y + physics.radius}, velocityColour),
-                sf::Vertex({pos.x + physics.radius + vel.x, pos.y + physics.radius + vel.y}, velocityColour),
-        };
-        window.draw(velocity, 2, sf::Lines);
 
     });
 
