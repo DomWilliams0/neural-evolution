@@ -22,8 +22,7 @@ struct NutritionSystem : public entityx::System<NutritionSystem>, public EventHa
 
     void update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) override;
 
-    virtual void onEvent(EatEvent &eat) override;
-
+    void onEvent(EatEvent &eat) override;
 
     void reset();
 
@@ -32,6 +31,15 @@ protected:
     World *world;
 
     void spawnRandomFood();
+};
+
+struct SensorSystem : public entityx::System<SensorSystem>, public EventHandler<FoodSenseEvent> {
+    void configure(entityx::EntityManager &entities, entityx::EventManager &events) override;
+
+    void update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) override;
+
+    void onEvent(FoodSenseEvent &t) override;
+
 };
 
 #endif

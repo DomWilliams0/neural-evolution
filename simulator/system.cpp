@@ -6,6 +6,16 @@
 #include "world.h"
 #include "collision.h"
 
+
+void NutritionSystem::configure(entityx::EntityManager &entities, entityx::EventManager &events) {
+    subscribe(this);
+}
+
+void SensorSystem::configure(entityx::EntityManager &entities, entityx::EventManager &events) {
+    subscribe(this);
+}
+
+
 void BrainSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
     entities.each<Brain, Physics>([this](entityx::Entity entity, Brain &brain, Physics &physics) {
         // gather inputs
@@ -27,11 +37,6 @@ void BrainSystem::update(entityx::EntityManager &entities, entityx::EventManager
     });
 }
 
-
-void NutritionSystem::configure(entityx::EntityManager &entities, entityx::EventManager &events) {
-    subscribe(this);
-}
-
 void NutritionSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
 
     if (Config::KEEP_SPAWNING_FOOD)
@@ -41,6 +46,10 @@ void NutritionSystem::update(entityx::EntityManager &entities, entityx::EventMan
         foodTime -= Config::FOOD_SPAWN_RATE;
         spawnRandomFood();
     }
+
+}
+
+void SensorSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
 
 }
 
@@ -54,6 +63,10 @@ void NutritionSystem::onEvent(EatEvent &eat) {
     }
 
 }
+void SensorSystem::onEvent(FoodSenseEvent &sense) {
+    sense.sensor.activated = sense.stimulated;
+}
+
 
 void NutritionSystem::spawnRandomFood() {
     float nutrition = Config::FOOD_NUTRITION;

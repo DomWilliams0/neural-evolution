@@ -24,6 +24,7 @@ Simulator::Simulator() : generationTime(Config::TIME_PER_GENERATION),
     // register systems
     systems.add<BrainSystem>(&this->world);
     systems.add<NutritionSystem>(&this->world);
+    systems.add<SensorSystem>();
 
     systems.configure();
 
@@ -42,10 +43,12 @@ static void addSensor(entityx::Entity &entity, float angle, float length) {
 
     b2EdgeShape edge;
     edge.Set(vertices.first, vertices.second);
-    LOGD << vertices.first.x << " " << vertices.first.y << " | " << vertices.second.x << " " << vertices.second.y << " : " << realLength << " " << realAngle;
+
+    UserData *userData = new UserData(EntityType::FOOD_SENSOR);
+    userData->entity = entity;
 
     b2FixtureDef def;
-    def.userData = new UserData(EntityType::SENSOR);
+    def.userData = userData;
     def.shape = &edge;
     def.isSensor = true;
 

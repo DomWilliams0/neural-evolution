@@ -133,11 +133,13 @@ void World::reset() {
 }
 
 static const int ENTITY_AND_FOOD = EntityType::ENTITY | EntityType::FOOD;
+static const int SENSOR_AND_FOOD = EntityType::FOOD_SENSOR | EntityType::FOOD;
 
 void CollisionHandler::BeginContact(b2Contact *contact) {
     UserData *a = static_cast<UserData *>(contact->GetFixtureA()->GetUserData());
     UserData *b = static_cast<UserData *>(contact->GetFixtureB()->GetUserData());
     int collision = a->type | b->type;
+    // TODO filter collisions
 
     if (collision == ENTITY_AND_FOOD) {
         entityx::Entity e(a->type == EntityType::ENTITY ? a->entity : b->entity);
@@ -145,5 +147,21 @@ void CollisionHandler::BeginContact(b2Contact *contact) {
         Consumer &c(*e.component<Consumer>());
 
         emit<EatEvent>(c, n);
+    }
+
+    else if (collision == SENSOR_AND_FOOD) {
+        entityx::Entity e(a->type == EntityType::FOOD_SENSOR ? a->entity : b->entity);
+        emit<FoodSenseEvent>(*e.component<FoodSensor>(), true);
+    }
+}
+
+void CollisionHandler::EndContact(b2Contact *contact) {
+    UserData *a = static_cast<UserData *>(contact->GetFixtureA()->GetUserData());
+    UserData *b = static_cast<UserData *>(contact->GetFixtureB()->GetUserData());
+    int collision = a->type | b->type;
+
+    if (collision == SENSOR_AND_FOOD) {
+        entityx::Entity e(a->type == EntityType::FOOD_SENSOR ? a->entity : b->entity);
+        emit<FoodSenseEvent>(*e.component<FoodSensor>(), false);
     }
 }

@@ -11,7 +11,7 @@ class NeuralNetwork;
 enum EntityType {
     ENTITY = 1 << 0,
     FOOD = 1 << 1,
-    SENSOR = 1 << 2
+    FOOD_SENSOR = 1 << 2
 };
 
 struct Physics {
@@ -35,10 +35,11 @@ struct Brain {
 };
 
 struct FoodSensor {
-    FoodSensor(float angle, float length) : angle(angle), length(length) {}
+    FoodSensor(float angle, float length) : angle(angle), length(length), activated(false) {}
 
     float angle;
     float length;
+    bool activated;
 };
 
 

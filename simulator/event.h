@@ -10,7 +10,7 @@ static Object NULL_OBJECT = Object();
 
 template<typename E, typename ... Args>
 void emit(Args &&... args) {
-    E event(NULL_OBJECT, std::forward<Args>(args) ...);
+    E event(std::forward<Args>(args) ...);
     EventBus::FireEvent(event);
 }
 
@@ -19,13 +19,22 @@ void subscribe(EventHandler<E> *handler) {
     EventBus::AddHandler(*handler);
 }
 
-struct EatEvent : public Event {
-    EatEvent(Object &sender, Consumer &consumer, Nutrition &nutrition)
-            : Event(sender), consumer(consumer), nutrition(nutrition) {}
+struct NeuralEvent : public Event {
+    NeuralEvent() : Event(NULL_OBJECT) {}
+};
+
+struct EatEvent : public NeuralEvent {
+    EatEvent(Consumer &consumer, Nutrition &nutrition) : consumer(consumer), nutrition(nutrition) {}
 
     Consumer &consumer;
     Nutrition &nutrition;
 };
 
+struct FoodSenseEvent : public NeuralEvent {
+    FoodSenseEvent(FoodSensor &sensor, bool stimulated) : sensor(sensor), stimulated(stimulated) {}
+
+    FoodSensor &sensor;
+    bool stimulated;
+};
 
 #endif

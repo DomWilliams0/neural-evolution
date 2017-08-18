@@ -81,12 +81,13 @@ void Renderer::tick(float dt) {
 }
 
 void Renderer::renderSimulation() {
-//    sim.getPhysicsWorld().DrawDebugData();
+    sim.getPhysicsWorld().DrawDebugData();
 
     sim.entities.each<Physics, FoodSensor>([this](entityx::Entity entity, Physics &physics, FoodSensor &sensor) {
         sf::Color bodyColour(50, 40, 180);
         sf::Color velocityColour(250, 250, 255);
-        sf::Color sensorColour(40, 150, 100);
+        sf::Color sensorColourOff(40, 150, 100);
+        sf::Color sensorColourOn(180, 40, 100);
 
         b2Vec2 pos(physics.getPosition());
         b2Vec2 vel(physics.getVelocity());
@@ -103,6 +104,7 @@ void Renderer::renderSimulation() {
         // sensor
         VecPair sensorRelativeVertices(
                 calculateSensorVertices(sensor.angle + physics.getAngle(), sensor.length, physics.radius));
+        sf::Color &sensorColour = sensor.activated ? sensorColourOn : sensorColourOff;
         sf::Vertex sensorVertices[2] = {
                 sf::Vertex({sensorRelativeVertices.first.x + pos.x + physics.radius,
                             sensorRelativeVertices.first.y + pos.y + physics.radius}, sensorColour),
@@ -126,4 +128,3 @@ void Renderer::renderSimulation() {
 void Renderer::renderFastForward() {
     window.draw(generationLabel);
 }
-
