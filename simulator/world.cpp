@@ -5,7 +5,7 @@
 #include "config.h"
 
 
-World::World(b2Vec2 dims) : dims(dims), time(0), physWorld({0.0, 0.0}), temperatureNoiseSeed(rand()),
+World::World(b2Vec2 dims) : dims(dims), time(0), physWorld({0.0, 0.0}), temperatureNoiseSeed(rand() * dims.x * dims.y),
                             temperatureNoise(new noise::module::Perlin) {
     temperatureNoise->SetFrequency(Config::TEMPERATURE_SCALE);
     temperatureNoise->SetOctaveCount(2);
