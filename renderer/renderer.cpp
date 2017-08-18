@@ -82,8 +82,6 @@ void Renderer::tick(float dt) {
 }
 
 void Renderer::renderSimulation() {
-//    sim.getPhysicsWorld().DrawDebugData();
-
     sf::Color foodColour(154, 185, 153);
     const b2Fixture *food = sim.getWorld().listFood();
     while (food != nullptr) {
@@ -92,7 +90,7 @@ void Renderer::renderSimulation() {
         circle.setFillColor(foodColour);
         circle.setOutlineColor({0, 0, 0});
         circle.setOutlineThickness(1);
-        circle.setPosition(vec(foodCircle->m_p));
+        circle.setPosition({foodCircle->m_p.x - foodCircle->m_radius, foodCircle->m_p.y - foodCircle->m_radius});
         window.draw(circle);
         food = food->GetNext();
     }
@@ -140,6 +138,8 @@ void Renderer::renderSimulation() {
     });
 
     window.draw(generationLabel);
+
+//    sim.getWorld().getPhysicsWorld().DrawDebugData();
 }
 
 void Renderer::renderFastForward() {
