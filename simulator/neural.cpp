@@ -38,6 +38,7 @@ void NeuralNetwork::copyAndMutate(NeuralNetwork *out) const {
         double variation = dis_normal(gen_normal);
         *it += variation;
     }
+    out->net.set_parameters(params);
 }
 
 void NeuralNetwork::tick(const std::vector<double> &inputs, std::vector<double> &outputs) {
