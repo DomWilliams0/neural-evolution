@@ -32,6 +32,7 @@ public:
 
     void run();
 
+    void renderFood(const b2Fixture *food);
 };
 
 #endif

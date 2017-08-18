@@ -6,7 +6,7 @@ Renderer::Renderer(unsigned int width, unsigned int height, Simulator &sim) :
         sim(sim), debugRenderer(window), currentGeneration(0) {
 
     debugRenderer.AppendFlags(b2Draw::e_shapeBit);
-    sim.getPhysicsWorld().SetDebugDraw(&debugRenderer);
+    sim.getWorld().getPhysicsWorld().SetDebugDraw(&debugRenderer);
 
     if (!font.loadFromFile("renderer/font.ttf"))
         throw std::runtime_error("Missing font.ttf");
@@ -81,7 +81,19 @@ void Renderer::tick(float dt) {
 }
 
 void Renderer::renderSimulation() {
-    sim.getPhysicsWorld().DrawDebugData();
+//    sim.getPhysicsWorld().DrawDebugData();
+
+    sf::Color foodColour(150, 220, 140);
+    const b2Fixture *food = sim.getWorld().listFood();
+    while (food != nullptr) {
+        b2CircleShape *foodCircle = (b2CircleShape *) food->GetShape();
+        sf::CircleShape circle(foodCircle->m_radius, 10);
+        circle.setFillColor(foodColour);
+        circle.setPosition(vec(foodCircle->m_p));
+        window.draw(circle);
+        food = food->GetNext();
+    }
+
 
     sim.entities.each<Physics, FoodSensor>([this](entityx::Entity entity, Physics &physics, FoodSensor &sensor) {
         sf::Color bodyColour(50, 40, 180);

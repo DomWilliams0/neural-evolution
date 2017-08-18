@@ -156,8 +156,8 @@ void Simulator::spawnEntities(const std::vector<EntityDef> &defs) {
     queuedSpawns.insert(queuedSpawns.end(), defs.cbegin(), defs.cend());
 }
 
-b2World &Simulator::getPhysicsWorld() {
-    return world.getPhysicsWorld();
+World &Simulator::getWorld() {
+    return world;
 }
 
 unsigned int Simulator::getGenerationNumber() const {

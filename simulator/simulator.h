@@ -44,7 +44,7 @@ public:
 
     void tick(float dt);
 
-    b2World &getPhysicsWorld();
+    World &getWorld();
 
     unsigned int getGenerationNumber() const;
 };

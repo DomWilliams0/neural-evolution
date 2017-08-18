@@ -42,6 +42,8 @@ public:
 
     b2World &getPhysicsWorld();
 
+    const b2Fixture *listFood() const;
+
     virtual ~World();
 
     void reset();

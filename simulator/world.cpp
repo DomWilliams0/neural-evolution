@@ -132,6 +132,10 @@ void World::reset() {
     time = 0;
 }
 
+const b2Fixture *World::listFood() const {
+    return foodFrame->GetFixtureList();
+}
+
 static const int ENTITY_AND_FOOD = EntityType::ENTITY | EntityType::FOOD;
 static const int SENSOR_AND_FOOD = EntityType::FOOD_SENSOR | EntityType::FOOD;
 
