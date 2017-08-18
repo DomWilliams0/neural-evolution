@@ -6,6 +6,7 @@
 #include "system.h"
 #include "neural.h"
 #include "util.h"
+#include "collision.h"
 
 void initLogger() {
     static plog::ColorConsoleAppender<plog::TxtFormatter> appender;
@@ -13,7 +14,7 @@ void initLogger() {
 }
 
 
-Simulator::Simulator() : world({Config::WORLD_WIDTH, Config::WORLD_HEIGHT}),
+Simulator::Simulator() : world(events),
                          generationTime(Config::TIME_PER_GENERATION),
                          generationNumber(1) {
     initLogger();
@@ -40,12 +41,14 @@ void Simulator::tick(float dt) {
     // populate new entities
     for (EntityDef &def : queuedSpawns) {
         def.id.assign<Brain>(def.brain ? def.brain : new NeuralNetwork);
+        def.id.assign<Consumer>();
 
         // physics
         b2Body *body = nullptr;
         b2Fixture *fixture = nullptr;
         def.world->spawnEntity(def.pos, def.radius, &body, &fixture);
         def.id.assign<Physics>(body, fixture, def.radius);
+        ((UserData *) fixture->GetUserData())->entity = def.id;
     }
     queuedSpawns.clear();
 

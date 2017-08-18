@@ -2,12 +2,15 @@
 #define NEURAL_EVOLUTION_WORLD_H
 
 #include <Box2D/Box2D.h>
+#include "entityx/Entity.h"
 
 namespace noise {
     namespace module {
         class Perlin;
     }
 }
+
+class CollisionHandler;
 
 class World {
 
@@ -20,9 +23,10 @@ protected:
 
     b2World physWorld;
     b2Body *foodFrame;
+    CollisionHandler *collisions;
 
 public:
-    World(b2Vec2 dims);
+    World(entityx::EventManager &events);
 
     void tick(float dt);
 

@@ -1,9 +1,10 @@
 #include <plog/Log.h>
 #include "system.h"
-#include "component.h"
 #include "neural.h"
 #include "util.h"
 #include "config.h"
+#include "world.h"
+#include "collision.h"
 
 void BrainSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
     entities.each<Brain, Physics>([this](entityx::Entity entity, Brain &brain, Physics &physics) {
@@ -26,6 +27,11 @@ void BrainSystem::update(entityx::EntityManager &entities, entityx::EventManager
     });
 }
 
+
+void NutritionSystem::configure(entityx::EntityManager &entities, entityx::EventManager &events) {
+    events.subscribe<EatEvent>(*this);
+}
+
 void NutritionSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
 
     if (Config::KEEP_SPAWNING_FOOD)
@@ -38,12 +44,21 @@ void NutritionSystem::update(entityx::EntityManager &entities, entityx::EventMan
 
 }
 
+void NutritionSystem::receive(const EatEvent &eat) {
+    const Consumer &consumer = eat.consumer;
+    const Nutrition &nutrition = eat.nutrition;
+
+    // TODO these need to be not const!
+    // consumer.totalEaten += nutrition.nutrition;
+    // nutrition.edible = false;
+}
+
 void NutritionSystem::spawnRandomFood() {
     float nutrition = Config::FOOD_NUTRITION;
     // TODO random range
 
     b2Fixture *fix = world->spawnFood(randomPosition(nutrition), nutrition * 2);
-    // TODO add user data
+    ((UserData *) fix->GetUserData())->nutrition = nutrition;
 }
 
 void NutritionSystem::reset() {

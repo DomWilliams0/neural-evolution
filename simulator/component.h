@@ -26,10 +26,17 @@ struct Brain {
 };
 
 struct Nutrition {
-    int nutrition;
+    float nutrition;
+    bool edible;
 
-    Nutrition(int nutrition) : nutrition(nutrition) {}
+    Nutrition(float nutrition) : nutrition(nutrition), edible(true) {}
+    Nutrition() : Nutrition(0) {}
 };
 
+struct Consumer {
+    float totalEaten;
+
+    Consumer() : totalEaten(0) {}
+};
 
 #endif

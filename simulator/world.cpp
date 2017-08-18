@@ -1,22 +1,29 @@
-#include <vector>
+
 #include <noise/noise.h>
 
+#include "collision.h"
 #include "world.h"
 #include "config.h"
+#include "event.h"
 
 
-World::World(b2Vec2 dims) : dims(dims), time(0), physWorld({0.0, 0.0}), temperatureNoiseSeed(rand() * dims.x * dims.y),
-                            temperatureNoise(new noise::module::Perlin) {
+World::World(entityx::EventManager &events) : dims(dims), time(0), physWorld({0.0, 0.0}), temperatureNoiseSeed(rand() * dims.x * dims.y),
+                            temperatureNoise(new noise::module::Perlin), collisions(new CollisionHandler(events)) {
     temperatureNoise->SetFrequency(Config::TEMPERATURE_SCALE);
     temperatureNoise->SetOctaveCount(2);
 
     b2BodyDef frameDef;
     frameDef.type = b2_staticBody;
     foodFrame = physWorld.CreateBody(&frameDef);
+
+    physWorld.SetContactListener(collisions);
 }
 
 World::~World() {
     delete temperatureNoise;
+
+    physWorld.SetContactListener(nullptr);
+//    delete collisions;
 }
 
 void World::tick(float dt) {
@@ -38,11 +45,19 @@ b2Vec2 World::getDimensions() const {
     return dims;
 }
 
+// helpers
+static UserData *createEntityData() {
+    return new UserData(EntityType::ENTITY);
+}
+
+static UserData *createFoodData() {
+    return new UserData(EntityType::FOOD);
+}
+
 void World::spawnEntity(const b2Vec2 &pos, float radius, b2Body **bodyOut, b2Fixture **fixtureOut) {
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     bodyDef.position = pos;
-    // TODO userdata on body or fixture?
 
     b2CircleShape circle;
     circle.m_p.SetZero(); // relative to body
@@ -50,6 +65,7 @@ void World::spawnEntity(const b2Vec2 &pos, float radius, b2Body **bodyOut, b2Fix
 
     b2FixtureDef fixtureDef;
     fixtureDef.density = 1;
+    fixtureDef.userData = createEntityData();
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wreturn-stack-address"
@@ -68,6 +84,7 @@ b2Fixture *World::spawnFood(const b2Vec2 &pos, float radius) {
 
     b2FixtureDef fixtureDef;
     fixtureDef.density = 1;
+    fixtureDef.userData = createFoodData();
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wreturn-stack-address"
@@ -101,4 +118,19 @@ void World::reset() {
     }
 
     time = 0;
+}
+
+static const int ENTITY_AND_FOOD = EntityType::ENTITY | EntityType::FOOD;
+
+void CollisionHandler::BeginContact(b2Contact *contact) {
+    UserData *a = static_cast<UserData *>(contact->GetFixtureA()->GetUserData());
+    UserData *b = static_cast<UserData *>(contact->GetFixtureB()->GetUserData());
+    int collision = a->type | b->type;
+
+    if (collision == ENTITY_AND_FOOD) {
+        entityx::Entity e(a->type == EntityType::ENTITY ? a->entity : b->entity);
+        Nutrition n(a->type == EntityType::FOOD ? a->nutrition : b->nutrition);
+
+        events.emit<EatEvent>(*e.component<Consumer>(), n);
+    }
 }
