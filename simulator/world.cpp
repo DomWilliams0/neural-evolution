@@ -70,6 +70,7 @@ void World::spawnEntity(const b2Vec2 &pos, float radius, b2Body **bodyOut, b2Fix
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     bodyDef.position = pos;
+    bodyDef.bullet = true;
 
     b2CircleShape circle;
     circle.m_p.SetZero(); // relative to body
