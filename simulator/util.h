@@ -10,5 +10,6 @@ b2Vec2 vecFromDegrees(float degrees, float length = 1);
 
 float degreesFromVec(const b2Vec2 &vec);
 
+b2Vec2 randomPosition(float radius);
 
 #endif

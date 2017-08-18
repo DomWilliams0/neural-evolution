@@ -1,6 +1,8 @@
 #ifndef NEURAL_EVOLUTION_CONFIG_H
 #define NEURAL_EVOLUTION_CONFIG_H
 
+#include <vector>
+
 namespace Config {
 
     // world
@@ -27,6 +29,13 @@ namespace Config {
     extern const float ENTITY_RADIUS;
     extern const float ENTITY_MAX_SPEED;
     extern const std::vector<unsigned int> NET_LAYERS;
+
+    // food
+    // TODO nutrition range
+    extern const float INITIAL_FOOD_SIMULATION;
+    extern const float FOOD_NUTRITION;
+    extern const float FOOD_SPAWN_RATE;
+    extern const bool KEEP_SPAWNING_FOOD;
 
     // renderer
     extern const unsigned int FONT_SIZE_NORMAL_SPEED;

@@ -1,4 +1,6 @@
+#include <cstdlib>
 #include "util.h"
+#include "config.h"
 
 const double DEG_TO_RAD = M_PI / 180.0;
 const double RAD_TO_DEG = 180.0 / M_PI;
@@ -13,4 +15,11 @@ b2Vec2 vecFromDegrees(float degrees, float length) {
 float degreesFromVec(const b2Vec2 &vec) {
     double radians = atan2(vec.y, vec.x);
     return static_cast<float>(radians * RAD_TO_DEG);
+}
+
+b2Vec2 randomPosition(float radius) {
+    return {
+            radius + (rand() % Config::WORLD_WIDTH) - radius - radius,
+            radius + (rand() % Config::WORLD_HEIGHT) - radius - radius
+    };
 }

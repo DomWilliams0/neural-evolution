@@ -9,6 +9,10 @@ World::World(b2Vec2 dims) : dims(dims), time(0), physWorld({0.0, 0.0}), temperat
                             temperatureNoise(new noise::module::Perlin) {
     temperatureNoise->SetFrequency(Config::TEMPERATURE_SCALE);
     temperatureNoise->SetOctaveCount(2);
+
+    b2BodyDef frameDef;
+    frameDef.type = b2_staticBody;
+    foodFrame = physWorld.CreateBody(&frameDef);
 }
 
 World::~World() {
@@ -19,7 +23,6 @@ void World::tick(float dt) {
     // tick time
     time = static_cast<float>(fmod(time + dt, Config::TIME_GRANUALITY));
 
-    // TODO depends on fast forward or not
     physWorld.Step(dt, 2, 2);
 }
 
@@ -57,6 +60,23 @@ void World::spawnEntity(const b2Vec2 &pos, float radius, b2Body **bodyOut, b2Fix
     *fixtureOut = (*bodyOut)->CreateFixture(&fixtureDef);
 }
 
+
+b2Fixture *World::spawnFood(const b2Vec2 &pos, float radius) {
+    b2CircleShape circle;
+    circle.m_p.Set(pos.x, pos.y);
+    circle.m_radius = static_cast<float32>(radius);
+
+    b2FixtureDef fixtureDef;
+    fixtureDef.density = 1;
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreturn-stack-address"
+    fixtureDef.shape = &circle;
+#pragma clang diagnostic pop
+
+    return foodFrame->CreateFixture(&fixtureDef);
+}
+
 b2World &World::getPhysicsWorld() {
     return physWorld;
 }
@@ -72,6 +92,13 @@ void World::reset() {
         b = next;
     }
 
-    // reset timers
+    // remove all food
+    b2Fixture *f = foodFrame->GetFixtureList();
+    while (f != nullptr) {
+        b2Fixture *next = f->GetNext();
+        foodFrame->DestroyFixture(f);
+        f = next;
+    }
+
     time = 0;
 }

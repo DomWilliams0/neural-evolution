@@ -19,6 +19,7 @@ protected:
     noise::module::Perlin *temperatureNoise;
 
     b2World physWorld;
+    b2Body *foodFrame;
 
 public:
     World(b2Vec2 dims);
@@ -32,6 +33,8 @@ public:
     b2Vec2 getDimensions() const;
 
     void spawnEntity(const b2Vec2 &pos, float radius, b2Body **bodyOut, b2Fixture **fixtureOut);
+
+    b2Fixture *spawnFood(const b2Vec2 &pos, float radius);
 
     b2World &getPhysicsWorld();
 

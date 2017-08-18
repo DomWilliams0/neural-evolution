@@ -5,6 +5,7 @@
 #include "simulator.h"
 #include "system.h"
 #include "neural.h"
+#include "util.h"
 
 void initLogger() {
     static plog::ColorConsoleAppender<plog::TxtFormatter> appender;
@@ -22,15 +23,12 @@ Simulator::Simulator() : world({Config::WORLD_WIDTH, Config::WORLD_HEIGHT}),
 
     // register systems
     systems.add<BrainSystem>(&this->world);
-    systems.add<NutritionSystem>();
+    systems.add<NutritionSystem>(&this->world);
 
     systems.configure();
 
     // create first generation from nothing
-    std::vector<EntityDef> firstGeneration;
-    createEntitiesFromBrains(firstGeneration, {});
-    spawnEntities(firstGeneration);
-
+    startNewGeneration();
 }
 
 void Simulator::tick(float dt) {
@@ -98,6 +96,7 @@ void Simulator::startNewGeneration() {
     // don't access old entities from now on
     world.reset();
     entities.reset();
+    systems.system<NutritionSystem>()->reset();
 
     // create a new generation from top, mutated brains
     std::vector<EntityDef> newGeneration;
@@ -119,12 +118,7 @@ void Simulator::createEntitiesFromBrains(std::vector<EntityDef> &out, const std:
         }
 
         float radius = Config::ENTITY_RADIUS;
-        b2Vec2 randomPos(
-                radius + (rand() % Config::WORLD_WIDTH) - radius - radius,
-                radius + (rand() % Config::WORLD_HEIGHT) - radius - radius
-        );
-
-        EntityDef def(entities.create(), randomPos, &world, radius, newBrain);
+        EntityDef def(entities.create(), randomPosition(radius), &world, radius, newBrain);
         out.push_back(def);
     }
 }

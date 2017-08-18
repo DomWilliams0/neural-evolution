@@ -1,3 +1,4 @@
+#include <plog/Log.h>
 #include "system.h"
 #include "component.h"
 #include "neural.h"
@@ -27,4 +28,24 @@ void BrainSystem::update(entityx::EntityManager &entities, entityx::EventManager
 
 void NutritionSystem::update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) {
 
+    if (Config::KEEP_SPAWNING_FOOD)
+        foodTime += dt;
+
+    while (foodTime >= Config::FOOD_SPAWN_RATE) {
+        foodTime -= Config::FOOD_SPAWN_RATE;
+        spawnRandomFood();
+    }
+
+}
+
+void NutritionSystem::spawnRandomFood() {
+    float nutrition = Config::FOOD_NUTRITION;
+    // TODO random range
+
+    b2Fixture *fix = world->spawnFood(randomPosition(nutrition), nutrition * 2);
+    // TODO add user data
+}
+
+void NutritionSystem::reset() {
+    foodTime = Config::INITIAL_FOOD_SIMULATION;
 }
