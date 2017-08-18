@@ -14,7 +14,7 @@ void initLogger() {
 
 Simulator::Simulator() : world({Config::WORLD_WIDTH, Config::WORLD_HEIGHT}),
                          generationTime(Config::TIME_PER_GENERATION),
-                         generationNumber(1), timeScale(1) {
+                         generationNumber(1) {
     initLogger();
 
     // seed random for OpenNN
@@ -34,8 +34,6 @@ Simulator::Simulator() : world({Config::WORLD_WIDTH, Config::WORLD_HEIGHT}),
 }
 
 void Simulator::tick(float dt) {
-    dt *= timeScale;
-
     generationTime -= dt;
 
     if (generationTime < 0)
@@ -107,7 +105,7 @@ void Simulator::startNewGeneration() {
     spawnEntities(newGeneration);
 
     // delete old brains
-    for (NeuralNetwork *& brain : topBrains)
+    for (NeuralNetwork *&brain : topBrains)
         delete brain;
 }
 
@@ -144,6 +142,3 @@ unsigned int Simulator::getGenerationNumber() const {
     return generationNumber;
 }
 
-void Simulator::setTimeScale(float scale) {
-    timeScale = scale;
-}

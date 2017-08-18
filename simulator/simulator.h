@@ -30,7 +30,6 @@ protected:
 
     float generationTime;
     unsigned int generationNumber;
-    float timeScale;
 
     std::vector<EntityDef> queuedSpawns;
 
@@ -48,9 +47,6 @@ public:
     b2World &getPhysicsWorld();
 
     unsigned int getGenerationNumber() const;
-
-    void setTimeScale(float scale);
-
 };
 
 

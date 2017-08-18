@@ -17,7 +17,6 @@ namespace Config {
 
     // fast forward
     extern const float FAST_FORWARD_TIME_SCALE;
-    extern const unsigned int FAST_FORWARD_ITERATIONS;
 
     // mutations
     extern const float MUTATE_NORMAL_MEAN;

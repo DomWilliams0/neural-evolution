@@ -32,7 +32,6 @@ protected:
 
     Simulator &sim;
     bool fastForward;
-    int iterations;
 
     void (Renderer::*renderer)();
 

@@ -13,8 +13,7 @@ namespace Config {
     const float TOP_PROPORTION_TO_TAKE = 0.25;
     const int GENERATION_SIZE = 30;
 
-    const float FAST_FORWARD_TIME_SCALE = 10; // may fuck physics if too fast
-    const unsigned int FAST_FORWARD_ITERATIONS = 10; // TODO not good to hardcode, just go as fast as possible
+    const float FAST_FORWARD_TIME_SCALE = 2; // may fuck physics if too fast
 
     const float MUTATE_NORMAL_MEAN = 0.0; // middle value
     const float MUTATE_NORMAL_SD = 0.2; // variation
