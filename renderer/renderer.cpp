@@ -30,6 +30,8 @@ void Renderer::run() {
                 case sf::Event::KeyPressed:
                     if (event.key.code == sf::Keyboard::Space)
                         setFastForward(!fastForward);
+                    else if (event.key.code == sf::Keyboard::Escape || event.key.code == sf::Keyboard::Q)
+                        window.close();
 
                 default:
                     break;
