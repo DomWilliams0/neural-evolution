@@ -6,9 +6,6 @@ NeuralNetwork::NeuralNetwork(const std::vector<unsigned int> &layers) {
     OpenNN::Vector<size_t> architecture(layers.begin(), layers.end());
     net.set(architecture);
 
-    // 0-1 output
-    net.construct_probabilistic_layer();
-
     // random parameters/weights/biases
     net.randomize_parameters_normal();
 }
