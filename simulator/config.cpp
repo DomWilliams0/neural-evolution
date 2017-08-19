@@ -7,7 +7,8 @@ namespace Config {
     const int WORLD_HEIGHT = 800;
     const int TIME_GRANUALITY = 100;
     const float TIME_GRANUALITY_RECIP = static_cast<const float>(1.0 / TIME_GRANUALITY);
-    const float TEMPERATURE_SCALE = 0.02; // smaller is more zoomed in
+    const float TEMPERATURE_SCALE = 0.05;
+    const unsigned int TEMPERATURE_GRID_GRANULARITY = 2;
 
     const int TIME_PER_GENERATION = 10;
     const float TOP_PROPORTION_TO_TAKE = 1;
@@ -35,4 +36,5 @@ namespace Config {
 
     const unsigned int FONT_SIZE_NORMAL_SPEED = 15;
     const unsigned int FONT_SIZE_FAST_FORWARD = 40;
+    const bool RENDER_TEMPERATURE = true;
 }

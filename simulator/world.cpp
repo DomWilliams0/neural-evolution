@@ -6,26 +6,42 @@
 #include "world.h"
 #include "config.h"
 #include "event.h"
-#include "component.h"
 
-
-World::World() : dims(dims), time(0), physWorld({0.0, 0.0}), temperatureNoiseSeed(rand() * dims.x * dims.y),
-                 temperatureNoise(new noise::module::Perlin), collisions(new CollisionHandler()) {
-    temperatureNoise->SetFrequency(Config::TEMPERATURE_SCALE);
-    temperatureNoise->SetOctaveCount(2);
-
+World::World() : dims({static_cast<float>(Config::WORLD_WIDTH), static_cast<float>(Config::WORLD_HEIGHT)}), time(0),
+                 physWorld({0.0, 0.0}),
+                 collisions(new CollisionHandler()) {
     b2BodyDef frameDef;
     frameDef.type = b2_staticBody;
     foodFrame = physWorld.CreateBody(&frameDef);
 
     physWorld.SetContactListener(collisions);
+
+    temperature.resize(static_cast<unsigned long>(
+                               ((dims.x * dims.y) / Config::TEMPERATURE_GRID_GRANULARITY)
+                               + 1)); // +1 for rounding
+
+
+//    temperatureNoise = new noise::module::Perlin;
+//    temperatureNoise->SetOctaveCount(2);
+//    temperatureNoise->SetFrequency(Config::TEMPERATURE_SCALE);
+//    temperatureSeed = rand() * dims.x * dims.y;
+    size_t rowLength = (size_t) (dims.x / Config::TEMPERATURE_GRID_GRANULARITY);
+    for (size_t i = 0; i < temperature.size(); i += Config::TEMPERATURE_GRID_GRANULARITY) {
+        size_t x = i % rowLength;
+        size_t y = i / rowLength;
+        temperature[i] = calculateTemperature(x, y);
+    }
 }
 
 World::~World() {
-    delete temperatureNoise;
-
     physWorld.SetContactListener(nullptr);
-//    delete collisions;
+    delete collisions;
+//    delete temperatureNoise;
+}
+
+float World::calculateTemperature(float x, float y) const {
+//    return static_cast<float>(temperatureNoise->GetValue(x, y, 0.2323));
+    return sinf(x * Config::TEMPERATURE_SCALE);
 }
 
 void World::tick(float dt) {
@@ -50,7 +66,15 @@ float World::getTime() const {
 }
 
 float World::getTemperature(const b2Vec2 &pos) const {
-    return static_cast<float>(temperatureNoise->GetValue(pos.x, pos.y, temperatureNoiseSeed));
+    size_t rowLength = (size_t) (dims.x / Config::TEMPERATURE_GRID_GRANULARITY);
+    int x = static_cast<int>(pos.x / Config::TEMPERATURE_GRID_GRANULARITY);
+    int y = static_cast<int>(pos.y / Config::TEMPERATURE_GRID_GRANULARITY);
+
+    x = (x / Config::TEMPERATURE_GRID_GRANULARITY) * Config::TEMPERATURE_GRID_GRANULARITY;
+    y = (y / Config::TEMPERATURE_GRID_GRANULARITY) * Config::TEMPERATURE_GRID_GRANULARITY;
+    size_t index = static_cast<size_t>((y * rowLength) + x);
+
+    return index > temperature.size() ? calculateTemperature(x, y) : temperature[index];
 }
 
 b2Vec2 World::getDimensions() const {

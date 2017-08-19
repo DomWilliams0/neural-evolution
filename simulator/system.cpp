@@ -1,7 +1,6 @@
 #include <plog/Log.h>
 #include "system.h"
 #include "neural.h"
-#include "util.h"
 #include "config.h"
 #include "world.h"
 #include "collision.h"

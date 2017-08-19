@@ -18,12 +18,15 @@ protected:
     b2Vec2 dims;
     float time;
 
-    double temperatureNoiseSeed;
-    noise::module::Perlin *temperatureNoise;
+//    float temperatureSeed;
+//    noise::module::Perlin *temperatureNoise;
+    std::vector<float> temperature;
 
     b2World physWorld;
     b2Body *foodFrame;
     CollisionHandler *collisions;
+
+    float calculateTemperature(float x, float y) const;
 
 public:
     World();

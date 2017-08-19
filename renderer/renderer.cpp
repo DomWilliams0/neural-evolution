@@ -16,6 +16,24 @@ Renderer::Renderer(unsigned int width, unsigned int height, Simulator &sim) :
 
     // sets renderer
     setFastForward(false);
+
+    if (Config::RENDER_TEMPERATURE) {
+        if (!temperature.create(width, height))
+            throw std::runtime_error("Can't create temperature texture");
+
+        sf::RectangleShape rect({Config::TEMPERATURE_GRID_GRANULARITY, Config::TEMPERATURE_GRID_GRANULARITY});
+        for (size_t y = 0; y < height; y += Config::TEMPERATURE_GRID_GRANULARITY) {
+            for (size_t x = 0; x < width; x += Config::TEMPERATURE_GRID_GRANULARITY) {
+                float temp = sim.getWorld().getTemperature({x, y});
+                int scaled = static_cast<int>(interpolate(temp, {-1, 1}, {0, 255}));
+                rect.setFillColor(sf::Color(scaled, scaled, scaled));
+                rect.setPosition(x, y);
+                temperature.draw(rect);
+            }
+        }
+        temperature.display();
+    }
+    temperatureSprite.setTexture(temperature.getTexture());
 }
 
 void Renderer::run() {
@@ -40,6 +58,9 @@ void Renderer::run() {
 
         sf::Color clear(85, 98, 100);
         window.clear(clear);
+
+        if (Config::RENDER_TEMPERATURE)
+            window.draw(temperatureSprite);
 
         float dt(clock.restart().asSeconds());
         tick(dt);

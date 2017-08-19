@@ -19,6 +19,9 @@ protected:
     sf::Text generationLabel;
     unsigned int currentGeneration;
 
+    sf::RenderTexture temperature;
+    sf::Sprite temperatureSprite;
+
     void setFastForward(bool ff);
 
     void tick(float dt);

@@ -11,6 +11,7 @@ namespace Config {
     extern const int TIME_GRANUALITY;
     extern const float TIME_GRANUALITY_RECIP;
     extern const float TEMPERATURE_SCALE;
+    extern const unsigned int TEMPERATURE_GRID_GRANULARITY;
 
     // generations
     extern const int TIME_PER_GENERATION;
@@ -42,6 +43,7 @@ namespace Config {
     // renderer
     extern const unsigned int FONT_SIZE_NORMAL_SPEED;
     extern const unsigned int FONT_SIZE_FAST_FORWARD;
+    extern const bool RENDER_TEMPERATURE;
 }
 
 #endif
