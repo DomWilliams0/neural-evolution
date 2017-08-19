@@ -7,7 +7,7 @@ namespace Config {
     const int WORLD_HEIGHT = 800;
     const int TIME_GRANUALITY = 100;
     const float TIME_GRANUALITY_RECIP = static_cast<const float>(1.0 / TIME_GRANUALITY);
-    const float TEMPERATURE_SCALE = 0.05;
+    const float TEMPERATURE_SCALE = 0.02;
     const unsigned int TEMPERATURE_GRID_GRANULARITY = 2;
 
     const int TIME_PER_GENERATION = 10;

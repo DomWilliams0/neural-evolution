@@ -1,5 +1,6 @@
 #include <util.h>
 #include "renderer.h"
+#include "hsl.h"
 
 Renderer::Renderer(unsigned int width, unsigned int height, Simulator &sim) :
         window(sf::VideoMode(width, height), "Neural Evolution", sf::Style::None),
@@ -22,11 +23,19 @@ Renderer::Renderer(unsigned int width, unsigned int height, Simulator &sim) :
             throw std::runtime_error("Can't create temperature texture");
 
         sf::RectangleShape rect({Config::TEMPERATURE_GRID_GRANULARITY, Config::TEMPERATURE_GRID_GRANULARITY});
+        HSL hotHsl(TurnToHSL({180, 50, 40}));
+        HSL coldHsl(TurnToHSL({50, 60, 200}));
+
         for (size_t y = 0; y < height; y += Config::TEMPERATURE_GRID_GRANULARITY) {
             for (size_t x = 0; x < width; x += Config::TEMPERATURE_GRID_GRANULARITY) {
                 float temp = sim.getWorld().getTemperature({x, y});
-                int scaled = static_cast<int>(interpolate(temp, {-1, 1}, {0, 255}));
-                rect.setFillColor(sf::Color(scaled, scaled, scaled));
+                float lum = interpolate(temp, {-1, 1}, {coldHsl.Luminance, hotHsl.Luminance});
+                float sat = interpolate(temp, {-1, 1}, {coldHsl.Saturation, hotHsl.Saturation});
+                float hue = interpolate(temp, {-1, 1}, {coldHsl.Hue, hotHsl.Hue});
+
+                sf::Color color(HSL(hue, sat, lum).TurnToRGB());
+                color.a = 200;
+                rect.setFillColor(color);
                 rect.setPosition(x, y);
                 temperature.draw(rect);
             }
